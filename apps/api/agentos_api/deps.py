@@ -6,6 +6,7 @@ from typing import Annotated
 
 from agentos.db.models import ApiCredential, Application
 from agentos.db.session import get_session_factory, set_org_context
+from agentos.identity.oauth import TokenError, verify_access_token
 from agentos.identity.security import verify_api_key
 from agentos.settings import Settings, get_settings
 from fastapi import Depends, Header, HTTPException, status
@@ -52,6 +53,9 @@ async def require_auth(
     # Set tenant context before RLS-protected reads; key must still match this org.
     await set_org_context(session, str(org_id))
 
+    if raw_key.count(".") == 2:
+        return await _auth_from_jwt(session, raw_key, org_id)
+
     result = await session.execute(
         select(ApiCredential, Application)
         .join(Application, Application.id == ApiCredential.application_id)
@@ -71,6 +75,41 @@ async def require_auth(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
 
     cred, app = matched
+    return AuthContext(
+        organization_id=org_id,
+        application_id=app.id,
+        credential_id=cred.id,
+        scopes=list(cred.scopes or []),
+        subject_type="application",
+        subject_id=app.id,
+    )
+
+
+async def _auth_from_jwt(
+    session: AsyncSession, raw_token: str, org_id: uuid.UUID
+) -> AuthContext:
+    settings = get_settings()
+    try:
+        claims = verify_access_token(raw_token, signing_key=settings.oauth_signing_key)
+        token_org = uuid.UUID(str(claims["org"]))
+        app_id = uuid.UUID(str(claims["sub"]))
+        cred_id = uuid.UUID(str(claims["cred"]))
+    except (TokenError, ValueError, KeyError) as exc:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized") from exc
+    if token_org != org_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
+
+    cred = await session.get(ApiCredential, cred_id)
+    app = await session.get(Application, app_id)
+    if (
+        cred is None
+        or app is None
+        or cred.revoked_at is not None
+        or app.status != "active"
+        or app.organization_id != org_id
+        or cred.application_id != app.id
+    ):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
     return AuthContext(
         organization_id=org_id,
         application_id=app.id,

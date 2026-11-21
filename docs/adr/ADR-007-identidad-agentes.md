@@ -23,6 +23,6 @@ No hay “el LLM dijo que pague” como autorización.
 - Tokens de corta vida + rotación.
 - Scopes mínimos: `wallets:read`, `balances:read`, `payments:create`, `transfers:execute`, `audit:read`.
 
-## Abierto
+## Estado 2026-11-21
 
-- OAuth2 completo vs API keys hasheadas en MVP (recomendación: API keys hasheadas + scopes para ir más rápido; OAuth después).
+MVP shipped with hashed API keys. Client-credentials is now also live: `POST /oauth/token` exchanges `client_id` (application UUID), `client_secret` (the raw API key) and `organization_id` for a short-lived HS256 JWT. The key stays hashed in Postgres. `X-Organization-Id` must match the token org. Authorization-code, UI, and a new secret column are still out.

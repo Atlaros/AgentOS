@@ -76,9 +76,17 @@ Gate: **ninguna fase de código arranca** hasta aprobar ADRs + decisiones abiert
 - [x] Demo Stellar vía API (`scripts/demo_stellar_api.py`)
 - [ ] CI verde en GitHub Actions — **bloqueado**: cuenta Atlaros locked por billing (runs no arrancan). Workflow corregido a Postgres `:5432` en GHA.
 
-## Post-MVP (explícitamente después)
+## Post-MVP
 
-Custodia/KMS · OAuth2 · Mainnet · Otros adapters · Baneco solo si API verificada · Billing · UI consola propia.
+- [x] OAuth2 client-credentials (`POST /oauth/token`). API keys siguen válidas.
+- [x] MCP Client (AgentOS como consumidor). `connect_mcp`: stdio, Streamable HTTP e in-process. Sin registro REST ni asiento en el libro.
+- [ ] Piloto dentro del repo Agent-IA
+- [ ] UI consola propia. Shell de laboratorio en `GET /console`. No cobra ni abre rieles cerrados.
+- [ ] Billing / planes SaaS. `GET /v1/billing/plan` devuelve el plan `lab` con `payment_provider` nulo.
+- [ ] Otros adapters (EVM u otras chains). `EvmRpcAdapter` lee saldo solo si `AGENTOS_EVM_RPC_URL` está puesto. No firma ni entra en `execute`.
+- [ ] Baneco / fiat, solo con API verificada. Sigue `baneco_api_unverified`. Sin cliente HTTP.
+- [ ] Mainnet. Sigue `mainnet_denied`.
+- [ ] Custodia / KMS / HSM. Un secreto se rechaza. La tabla `wallets` no gana columna de secreto.
 
 ## Orden recomendado (resumen ejecutivo)
 

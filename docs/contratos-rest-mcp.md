@@ -57,6 +57,32 @@ Cada tool = caso de uso REST; **no** SQL.
 
 Tools **no** incluidos en MVP: custodia, firmar arbitrario, exportar secrets, bypass policy.
 
+## MCP Client (post-MVP)
+
+AgentOS como consumidor. No es un tool del server `agentos-mcp` y no pasa por policy ni por el libro.
+
+```python
+from mcp.client.stdio import StdioServerParameters
+from agentos_mcp.client import connect_mcp
+
+async with connect_mcp(StdioServerParameters(command="agentos-mcp", args=[])) as session:
+    names = await session.list_tool_names()
+    text = await session.call_tool("list_wallets", {})
+```
+
+También acepta una URL Streamable HTTP (`http://host/mcp`) o un `MCPServer` in-process.
+
+## Post-MVP — seams de laboratorio
+
+Todavía no están cerrados. No hay cobro, ni Baneco, ni mainnet, ni custodia.
+
+| Método | Ruta | Auth | Nota |
+| --- | --- | --- | --- |
+| GET | `/console` | no | HTML. No embebe secretos. |
+| GET | `/v1/billing/plan` | `orgs:read` | `code=lab`, `payment_provider=null`, `charges=false` |
+| GET | `/v1/connections` | `orgs:read` | `baneco_api_unverified`, `mainnet_denied`, EVM `not_connected` salvo `AGENTOS_EVM_RPC_URL` |
+| POST | `/v1/fiat-settlements` | `payments:create` | Factory avisa un pago fiat ya confirmado. `Idempotency-Key` = `provider_ref`. No mueve una wallet. |
+
 ## SDK (Python) — superficie mínima
 
 ```python

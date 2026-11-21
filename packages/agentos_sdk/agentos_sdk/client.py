@@ -32,6 +32,7 @@ class AgentOS:
         self.payments = _Payments(self)
         self.transfers = _Transfers(self)
         self.ledger = _Ledger(self)
+        self.settlements = _Settlements(self)
         self.orgs = _Orgs(self)
         self.applications = _Applications(self)
         self.agents = _Agents(self)
@@ -218,6 +219,32 @@ class _Transfers:
 
     def get(self, transfer_id: str) -> dict[str, Any]:
         return self._root.request("GET", f"/v1/transfers/{transfer_id}")
+
+
+class _Settlements:
+    def __init__(self, root: AgentOS) -> None:
+        self._root = root
+
+    def record(
+        self,
+        *,
+        provider: str,
+        provider_ref: str,
+        amount: str,
+        currency: str,
+        idempotency_key: str | None = None,
+    ) -> dict[str, Any]:
+        return self._root.request(
+            "POST",
+            "/v1/fiat-settlements",
+            json={
+                "provider": provider,
+                "provider_ref": provider_ref,
+                "amount": amount,
+                "currency": currency,
+            },
+            idempotency_key=idempotency_key or provider_ref,
+        )
 
 
 class _Ledger:

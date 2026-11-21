@@ -13,6 +13,7 @@ from agentos.db.models import (
     Application,
     Approval,
     Asset,
+    LedgerEntry,
     Membership,
     Organization,
     PaymentRequest,
@@ -23,6 +24,13 @@ from agentos.db.models import (
 )
 from agentos.db.session import set_org_context
 from agentos.identity.security import ALL_SCOPES, body_hash, generate_api_key
+from agentos.ledger.fiat import (
+    FIAT_ENTRY_TYPE,
+    FIAT_REF_TYPE,
+    replay_status,
+    settlement_id,
+    settlement_payload,
+)
 from agentos.ledger.service import append_ledger
 from agentos.policy.engine import evaluate_policy
 from agentos.settings import Settings
@@ -41,8 +49,10 @@ from agentos_api.schemas import (
     BootstrapResponse,
     CreateAgentRequest,
     CreateApplicationRequest,
+    CreateFiatSettlement,
     CreatePaymentRequest,
     ExecuteTransferRequest,
+    FiatSettlementResponse,
     LedgerEntryResponse,
     LinkWalletRequest,
     OrgResponse,
@@ -723,6 +733,49 @@ async def get_transfer(
         network_tx_id=intent.network_tx_id,
         amount=intent.amount,
         to_address=intent.to_address,
+    )
+
+
+@router.post("/v1/fiat-settlements", response_model=FiatSettlementResponse)
+async def record_fiat_settlement(
+    body: CreateFiatSettlement,
+    auth: Annotated[AuthContext, Depends(require_scope("payments:create"))],
+    session: Annotated[AsyncSession, Depends(get_session)],
+    idempotency_key: Annotated[str | None, Header(alias="Idempotency-Key")] = None,
+) -> FiatSettlementResponse:
+    """Record a fiat payment Factory already confirmed. Does not move a wallet."""
+    if not idempotency_key or idempotency_key != body.provider_ref or body.amount <= 0:
+        raise HTTPException(status_code=422, detail="validation")
+    payload = settlement_payload(
+        provider=body.provider,
+        provider_ref=body.provider_ref,
+        amount=format(body.amount, "f"),
+        currency=body.currency.upper(),
+    )
+    entry_id = settlement_id(auth.organization_id, body.provider_ref)
+    existing = await session.get(LedgerEntry, entry_id)
+    status_name = replay_status(None if existing is None else existing.payload, payload)
+    if status_name == "conflict" or (
+        existing is not None and existing.organization_id != auth.organization_id
+    ):
+        raise HTTPException(status_code=409, detail="conflict")
+    if existing is None:
+        await append_ledger(
+            session,
+            organization_id=auth.organization_id,
+            entry_type=FIAT_ENTRY_TYPE,
+            ref_type=FIAT_REF_TYPE,
+            ref_id=entry_id,
+            payload=payload,
+            entry_id=entry_id,
+        )
+        await session.commit()
+    return FiatSettlementResponse(
+        id=entry_id,
+        entry_type=FIAT_ENTRY_TYPE,
+        provider_ref=body.provider_ref,
+        amount=payload["amount"],
+        currency=payload["currency"],
     )
 
 

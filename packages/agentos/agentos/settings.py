@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     stellar_horizon_url: str = "https://horizon-testnet.stellar.org"
     stellar_network_passphrase: str = "Test SDF Network ; September 2015"
     stellar_secret_key: str = ""
+    oauth_signing_key: str = "lab-only-change-me-32b-min-key!!"
+    oauth_token_ttl_seconds: int = 900
 
 
 def get_settings() -> Settings:

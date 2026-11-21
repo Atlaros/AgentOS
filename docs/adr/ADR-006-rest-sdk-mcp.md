@@ -15,7 +15,13 @@ Los consumidores serán apps y agentes. MCP no sustituye auth ni custodia.
 | **SDK** (Python primero) | Cliente thin sobre REST |
 | **MCP Server** | Tools de lectura + ops gated por Policy (mismo backend que REST) |
 
-MCP Client (AgentOS consume tools externas) = post-MVP salvo necesidad demostrada.
+MCP Client (AgentOS consume tools externas) = post-MVP. Entregado como librería, no como proxy REST.
+
+## Actualización — MCP Client
+
+`connect_mcp` (`agentos_mcp.client`) abre una sesión contra un servidor externo por stdio, Streamable HTTP, o in-process en tests. Lista tools y llama una; el texto del resultado es `str`. Tool ausente o con error: `McpToolError`.
+
+No autentica contra AgentOS, no crea payment requests, transfers ni asientos de ledger, y no persiste servidores externos.
 
 ## Consecuencias
 

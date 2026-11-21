@@ -120,3 +120,18 @@ class LedgerEntryResponse(BaseModel):
     ref_type: str
     ref_id: uuid.UUID
     payload: dict
+
+
+class CreateFiatSettlement(BaseModel):
+    provider: str = Field(min_length=1, max_length=64)
+    provider_ref: str = Field(min_length=1, max_length=128)
+    amount: Decimal
+    currency: str = Field(min_length=3, max_length=8)
+
+
+class FiatSettlementResponse(BaseModel):
+    id: uuid.UUID
+    entry_type: str
+    provider_ref: str
+    amount: str
+    currency: str
