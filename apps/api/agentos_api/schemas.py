@@ -71,6 +71,37 @@ class ApproveRequest(BaseModel):
     reason: str | None = None
 
 
+class RejectRequest(BaseModel):
+    reason: str | None = None
+
+
+class CreateApplicationRequest(BaseModel):
+    name: str = Field(min_length=2, max_length=128)
+    scopes: list[str] | None = None
+
+
+class ApplicationResponse(BaseModel):
+    id: uuid.UUID
+    name: str
+    status: str
+    api_key: str | None = None
+    scopes: list[str]
+
+
+class CreateAgentRequest(BaseModel):
+    name: str = Field(min_length=2, max_length=128)
+    application_id: uuid.UUID
+    scopes: list[str] | None = None
+
+
+class AgentResponse(BaseModel):
+    id: uuid.UUID
+    name: str
+    application_id: uuid.UUID
+    scopes: list[str]
+    status: str
+
+
 class ExecuteTransferRequest(BaseModel):
     payment_request_id: uuid.UUID
 

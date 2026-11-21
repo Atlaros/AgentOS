@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Annotated
 
 from agentos.db.models import ApiCredential, Application
-from agentos.db.session import SessionLocal, set_org_context
+from agentos.db.session import get_session_factory, set_org_context
 from agentos.identity.security import verify_api_key
 from agentos.settings import Settings, get_settings
 from fastapi import Depends, Header, HTTPException, status
@@ -24,7 +24,8 @@ class AuthContext:
 
 
 async def get_session() -> AsyncSession:
-    async with SessionLocal() as session:
+    factory = get_session_factory()
+    async with factory() as session:
         yield session
 
 

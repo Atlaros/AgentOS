@@ -16,14 +16,15 @@ jobs:
           POSTGRES_PASSWORD: agentos
           POSTGRES_DB: agentos
         ports:
-          - 5433:5432
+          - 5432:5432
         options: >-
           --health-cmd "pg_isready -U agentos -d agentos"
           --health-interval 3s
           --health-timeout 3s
           --health-retries 20
     env:
-      AGENTOS_DATABASE_URL: postgresql+asyncpg://agentos:agentos@127.0.0.1:5433/agentos
+      # GHA maps service port 5432 locally; lab docker-compose still uses host 5433.
+      AGENTOS_DATABASE_URL: postgresql+asyncpg://agentos:agentos@127.0.0.1:5432/agentos
       AGENTOS_BOOTSTRAP_TOKEN: change-me-lab-only
       AGENTOS_RUN_INTEGRATION: "1"
     steps:
@@ -41,4 +42,4 @@ jobs:
       - name: Unit + integration
         run: uv run pytest -q
       - name: Ruff
-        run: uv run ruff check packages apps tests
+        run: uv run ruff check packages apps tests examples scripts

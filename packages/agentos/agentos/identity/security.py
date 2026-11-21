@@ -7,6 +7,9 @@ import bcrypt
 
 ALL_SCOPES = [
     "orgs:read",
+    "apps:write",
+    "agents:write",
+    "agents:read",
     "wallets:read",
     "wallets:link",
     "balances:read",

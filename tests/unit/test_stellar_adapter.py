@@ -7,6 +7,11 @@ from agentos.settings import Settings
 from stellar_sdk import Keypair
 
 
+def test_format_amount_trims_db_scale() -> None:
+    assert StellarTestnetAdapter._format_amount(Decimal("1.000000000000000000")) == "1"
+    assert StellarTestnetAdapter._format_amount(Decimal("1.23456789")) == "1.2345678"
+
+
 def test_is_stellar_address() -> None:
     kp = Keypair.random()
     assert is_stellar_address(kp.public_key)

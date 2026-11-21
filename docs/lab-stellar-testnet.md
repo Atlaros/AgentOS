@@ -53,8 +53,19 @@ curl -X POST http://127.0.0.1:8080/v1/wallets/link \
 
 The lab signer can **only** pay from the public key derived from `AGENTOS_STELLAR_SECRET_KEY`.
 
+## API walkthrough (script)
+
+With the API already running under the same `AGENTOS_STELLAR_SECRET_KEY`:
+
+```bash
+uv run python scripts/demo_stellar_api.py
+```
+
+This bootstraps an org, links the signer public key on `stellar/testnet`, creates an auto-allowed 1 XLM payment, and executes the transfer through REST/SDK.
+
 ## Verify
 
 - Transfer status `confirmed` with a Horizon `network_tx_id` (tx hash).
 - Ledger shows `transfer_confirmed`.
 - No secret appears in ledger payloads.
+

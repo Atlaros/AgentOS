@@ -64,6 +64,12 @@ uv run agentos-mcp
 
 Fake is the default Sunday demo. Optional real Testnet path: see [`docs/lab-stellar-testnet.md`](docs/lab-stellar-testnet.md).
 
+```bash
+export AGENTOS_STELLAR_SECRET_KEY=S...   # same value used to start the API
+uv run python scripts/demo_stellar_api.py
+```
+
+
 ## Out of scope (for now)
 
 Custody · Mainnet · Fiat/Baneco · Factory/Agent-IA code changes · commerce UI · billing

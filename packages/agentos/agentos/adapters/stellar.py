@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import asyncio
-from decimal import Decimal
+from decimal import ROUND_DOWN, Decimal
 
 from stellar_sdk import Asset, Keypair, Network, Server, TransactionBuilder
 from stellar_sdk.exceptions import NotFoundError, SdkError
@@ -132,6 +132,12 @@ class StellarTestnetAdapter:
         self._submitted[idempotency_key] = result
         return result
 
+    @staticmethod
+    def _format_amount(amount: Decimal) -> str:
+        # Horizon rejects excess scale from Numeric(36,18) values like 1.000000000000000000
+        quantized = amount.quantize(Decimal("0.0000001"), rounding=ROUND_DOWN)
+        return format(quantized.normalize(), "f")
+
     def _submit_sync(
         self,
         signer: Keypair,
@@ -152,7 +158,7 @@ class StellarTestnetAdapter:
                 .append_payment_op(
                     destination=to_address,
                     asset=Asset.native(),
-                    amount=format(amount, "f"),
+                    amount=self._format_amount(amount),
                 )
                 .set_timeout(60)
             )

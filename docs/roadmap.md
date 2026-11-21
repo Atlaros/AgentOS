@@ -30,7 +30,7 @@ Gate: **ninguna fase de código arranca** hasta aprobar ADRs + decisiones abiert
 - Criterios:
   - [x] Crear org + app + key
   - [x] Request sin key = 401
-  - [ ] Cross-org isolation test verde (pendiente explícito)
+  - [x] Cross-org isolation test verde
 
 ## Fase 4 — Wallet & Assets (+ Fake)
 
@@ -69,6 +69,12 @@ Gate: **ninguna fase de código arranca** hasta aprobar ADRs + decisiones abiert
 - Criterios:
   - [x] Demo: consulta + payment request + transfer bajo policy vía SDK
   - [x] Factory sin cambios requeridos
+
+## Deuda lab cerrada (post F8)
+
+- [x] Reject payment + create application/agent + list/get agents
+- [x] Demo Stellar vía API (`scripts/demo_stellar_api.py`)
+- [ ] CI verde en GitHub Actions — **bloqueado**: cuenta Atlaros locked por billing (runs no arrancan). Workflow corregido a Postgres `:5432` en GHA.
 
 ## Post-MVP (explícitamente después)
 

@@ -8,6 +8,7 @@ from typing import Annotated
 from agentos.adapters.registry import resolve_adapter
 from agentos.adapters.stellar import is_stellar_address
 from agentos.db.models import (
+    AgentIdentity,
     ApiCredential,
     Application,
     Approval,
@@ -32,16 +33,21 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from agentos_api.deps import AuthContext, get_session, require_scope, settings_dep
 from agentos_api.schemas import (
+    AgentResponse,
+    ApplicationResponse,
     ApproveRequest,
     BalanceResponse,
     BootstrapRequest,
     BootstrapResponse,
+    CreateAgentRequest,
+    CreateApplicationRequest,
     CreatePaymentRequest,
     ExecuteTransferRequest,
     LedgerEntryResponse,
     LinkWalletRequest,
     OrgResponse,
     PaymentRequestResponse,
+    RejectRequest,
     TransferResponse,
     WalletResponse,
 )
@@ -149,6 +155,132 @@ async def org_me(
     if org is None:
         raise HTTPException(status_code=404, detail="not_found")
     return OrgResponse(id=org.id, slug=org.slug, name=org.name)
+
+
+@router.post("/v1/applications", response_model=ApplicationResponse, status_code=201)
+async def create_application(
+    body: CreateApplicationRequest,
+    auth: Annotated[AuthContext, Depends(require_scope("apps:write"))],
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> ApplicationResponse:
+    scopes = body.scopes or ALL_SCOPES
+    unknown = [s for s in scopes if s not in ALL_SCOPES]
+    if unknown:
+        raise HTTPException(status_code=422, detail="validation")
+    app = Application(organization_id=auth.organization_id, name=body.name, status="active")
+    session.add(app)
+    await session.flush()
+    raw_key, prefix, key_hash = generate_api_key()
+    session.add(
+        ApiCredential(
+            application_id=app.id,
+            key_prefix=prefix,
+            key_hash=key_hash,
+            scopes=scopes,
+        )
+    )
+    await append_ledger(
+        session,
+        organization_id=auth.organization_id,
+        entry_type="application_created",
+        ref_type="application",
+        ref_id=app.id,
+        payload={"name": app.name},
+    )
+    await session.commit()
+    return ApplicationResponse(
+        id=app.id,
+        name=app.name,
+        status=app.status,
+        api_key=raw_key,
+        scopes=scopes,
+    )
+
+
+@router.post("/v1/agents", response_model=AgentResponse, status_code=201)
+async def create_agent(
+    body: CreateAgentRequest,
+    auth: Annotated[AuthContext, Depends(require_scope("agents:write"))],
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> AgentResponse:
+    app = await session.get(Application, body.application_id)
+    if app is None or app.organization_id != auth.organization_id:
+        raise HTTPException(status_code=404, detail="not_found")
+    scopes = body.scopes or [
+        "wallets:read",
+        "balances:read",
+        "payments:create",
+        "transfers:execute",
+        "audit:read",
+    ]
+    unknown = [s for s in scopes if s not in ALL_SCOPES]
+    if unknown:
+        raise HTTPException(status_code=422, detail="validation")
+    agent = AgentIdentity(
+        organization_id=auth.organization_id,
+        application_id=app.id,
+        name=body.name,
+        scopes=scopes,
+        status="active",
+    )
+    session.add(agent)
+    await session.flush()
+    await append_ledger(
+        session,
+        organization_id=auth.organization_id,
+        entry_type="agent_created",
+        ref_type="agent_identity",
+        ref_id=agent.id,
+        payload={"name": agent.name, "application_id": str(app.id)},
+    )
+    await session.commit()
+    return AgentResponse(
+        id=agent.id,
+        name=agent.name,
+        application_id=agent.application_id,
+        scopes=agent.scopes,
+        status=agent.status,
+    )
+
+
+@router.get("/v1/agents", response_model=list[AgentResponse])
+async def list_agents(
+    auth: Annotated[AuthContext, Depends(require_scope("agents:read"))],
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> list[AgentResponse]:
+    rows = (
+        await session.scalars(
+            select(AgentIdentity).where(AgentIdentity.organization_id == auth.organization_id)
+        )
+    ).all()
+    return [
+        AgentResponse(
+            id=a.id,
+            name=a.name,
+            application_id=a.application_id,
+            scopes=a.scopes,
+            status=a.status,
+        )
+        for a in rows
+    ]
+
+
+@router.get("/v1/agents/{agent_id}", response_model=AgentResponse)
+async def get_agent(
+    agent_id: uuid.UUID,
+    auth: Annotated[AuthContext, Depends(require_scope("agents:read"))],
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> AgentResponse:
+    agent = await session.get(AgentIdentity, agent_id)
+    if agent is None or agent.organization_id != auth.organization_id:
+        raise HTTPException(status_code=404, detail="not_found")
+    return AgentResponse(
+        id=agent.id,
+        name=agent.name,
+        application_id=agent.application_id,
+        scopes=agent.scopes,
+        status=agent.status,
+    )
 
 
 @router.post("/v1/wallets/link", response_model=WalletResponse)
@@ -426,6 +558,57 @@ async def approve_payment(
         to_address=pr.to_address,
         from_wallet_id=pr.from_wallet_id,
         policy_effect="allow",
+    )
+
+
+@router.post("/v1/payment-requests/{payment_id}/reject", response_model=PaymentRequestResponse)
+async def reject_payment(
+    payment_id: uuid.UUID,
+    body: RejectRequest,
+    auth: Annotated[AuthContext, Depends(require_scope("approvals:decide"))],
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> PaymentRequestResponse:
+    pr = await session.get(PaymentRequest, payment_id)
+    if pr is None or pr.organization_id != auth.organization_id:
+        raise HTTPException(status_code=404, detail="not_found")
+    if pr.status != "pending_approval":
+        raise HTTPException(status_code=409, detail="conflict")
+
+    membership = await session.scalar(
+        select(Membership).where(
+            Membership.organization_id == auth.organization_id,
+            Membership.role == "owner",
+        )
+    )
+    if membership is None:
+        raise HTTPException(status_code=422, detail="validation")
+
+    session.add(
+        Approval(
+            organization_id=auth.organization_id,
+            payment_request_id=pr.id,
+            decided_by_user_id=membership.user_id,
+            decision="rejected",
+            reason=body.reason,
+        )
+    )
+    pr.status = "rejected"
+    await append_ledger(
+        session,
+        organization_id=auth.organization_id,
+        entry_type="payment_rejected",
+        ref_type="payment_request",
+        ref_id=pr.id,
+        payload={"reason": body.reason},
+    )
+    await session.commit()
+    return PaymentRequestResponse(
+        id=pr.id,
+        status=pr.status,
+        amount=pr.amount,
+        to_address=pr.to_address,
+        from_wallet_id=pr.from_wallet_id,
+        policy_effect="deny",
     )
 
 

@@ -33,6 +33,8 @@ class AgentOS:
         self.transfers = _Transfers(self)
         self.ledger = _Ledger(self)
         self.orgs = _Orgs(self)
+        self.applications = _Applications(self)
+        self.agents = _Agents(self)
 
     def close(self) -> None:
         self._client.close()
@@ -154,6 +156,47 @@ class _Payments:
             f"/v1/payment-requests/{payment_request_id}/approve",
             json={"reason": reason},
         )
+
+    def reject(self, payment_request_id: str, *, reason: str | None = None) -> dict[str, Any]:
+        return self._root.request(
+            "POST",
+            f"/v1/payment-requests/{payment_request_id}/reject",
+            json={"reason": reason},
+        )
+
+
+class _Applications:
+    def __init__(self, root: AgentOS) -> None:
+        self._root = root
+
+    def create(self, *, name: str, scopes: list[str] | None = None) -> dict[str, Any]:
+        payload: dict[str, Any] = {"name": name}
+        if scopes is not None:
+            payload["scopes"] = scopes
+        return self._root.request("POST", "/v1/applications", json=payload)
+
+
+class _Agents:
+    def __init__(self, root: AgentOS) -> None:
+        self._root = root
+
+    def create(
+        self,
+        *,
+        name: str,
+        application_id: str,
+        scopes: list[str] | None = None,
+    ) -> dict[str, Any]:
+        payload: dict[str, Any] = {"name": name, "application_id": application_id}
+        if scopes is not None:
+            payload["scopes"] = scopes
+        return self._root.request("POST", "/v1/agents", json=payload)
+
+    def list(self) -> list[dict[str, Any]]:
+        return self._root.request("GET", "/v1/agents")
+
+    def get(self, agent_id: str) -> dict[str, Any]:
+        return self._root.request("GET", f"/v1/agents/{agent_id}")
 
 
 class _Transfers:
