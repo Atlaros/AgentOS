@@ -22,40 +22,42 @@
 Marcá sí/no o elegí opción. Sin esto, **no** se crea repo ni se escribe código.
 
 ### D1 — Estrategia
-- [ ] **Aprobar Alternativa B** (repo nuevo, extracción selectiva) — ADR-001
+- [x] **Aprobar Alternativa B** (repo nuevo, extracción selectiva) — ADR-001
 
 ### D2 — Nombre y hosting del repo
-- [ ] Nombre: `AgentOS` / otro: ________  
-- [ ] Org GitHub: `Atlaros` / personal / otro: ________  
-- [ ] Visibilidad: private (recomendado) / public
+- [x] Nombre: `AgentOS`
+- [x] Org GitHub: `Atlaros`
+- [x] Visibilidad: private
 
 ### D3 — Auth MVP
-- [ ] API keys hasheadas + scopes (recomendado ADR-007)  
+- [x] API keys hasheadas + scopes (recomendado ADR-007)  
 - [ ] OAuth2 client-credentials desde día 1
 
 ### D4 — Signer path en lab Stellar
-- [ ] Secret solo en env del proceso adapter (lab)  
+- [x] Secret solo en env del proceso adapter (lab)  
 - [ ] Mini signer service aparte desde el inicio
 
 ### D5 — Asset del piloto Testnet
-- [ ] XLM nativo  
+- [x] XLM nativo  
 - [ ] Asset de confianza (issuer lab)
 
 ### D6 — MCP en el mismo tren que primera transfer
 - [ ] Sí: REST+MCP juntos en Fase 7 inmediata post-Stellar  
-- [ ] No: primero REST+SDK; MCP fase siguiente
+- [x] No: primero REST+SDK; MCP fase siguiente
 
 ### D7 — Membership multi-org
-- [ ] Un user en varias orgs (recomendado)  
+- [x] Un user en varias orgs (recomendado)  
 - [ ] Un user = una org en MVP
 
 ### D8 — Ubicación de esta documentación al crear el repo
-- [ ] Copiar ADRs/docs aprobados a `docs/` del repo nuevo  
+- [x] Copiar ADRs/docs aprobados a `docs/` del repo nuevo  
 - [ ] Dejar el store como archivo histórico y reescribir en repo
 
 ### D9 — Confirmación de exclusiones
-- [ ] Confirmo: no modificar Factory ni Agent-IA V2  
-- [ ] Confirmo: no copiar migraciones / LangGraph / WhatsApp / lienzo / catálogo / pedidos / stock / contabilidad comercial
+- [x] Confirmo: no modificar Factory ni Agent-IA V2  
+- [x] Confirmo: no copiar migraciones / LangGraph / WhatsApp / lienzo / catálogo / pedidos / stock / contabilidad comercial
+
+**Aprobado para demo domingo (2026-11-20):** deliverable B — Fake E2E wallet → transfer under policy. MCP y Stellar Testnet quedan stretch/post-demo.
 
 ## Decisiones explícitamente aplazadas (no bloquean scaffolding)
 

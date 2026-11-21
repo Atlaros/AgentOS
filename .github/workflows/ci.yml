@@ -1,0 +1,44 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: agentos
+          POSTGRES_PASSWORD: agentos
+          POSTGRES_DB: agentos
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U agentos -d agentos"
+          --health-interval 3s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      AGENTOS_DATABASE_URL: postgresql+asyncpg://agentos:agentos@127.0.0.1:5433/agentos
+      AGENTOS_BOOTSTRAP_TOKEN: change-me-lab-only
+      AGENTOS_RUN_INTEGRATION: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+        with:
+          version: "0.11.8"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: uv sync --all-packages --group dev
+      - name: Migrate
+        run: uv run alembic upgrade head
+      - name: Unit + integration
+        run: uv run pytest -q
+      - name: Ruff
+        run: uv run ruff check packages apps tests

@@ -29,7 +29,8 @@ Factory Agent y Agent-IA V2 **no se modifican** y **no son dependencias**.
 | [contratos-rest-mcp.md](contratos-rest-mcp.md) | API + tools |
 | [flujo-stellar-testnet.md](flujo-stellar-testnet.md) | E2E transferencia |
 | [roadmap.md](roadmap.md) | Fases y aceptación |
-| [riesgos-y-decisiones.md](riesgos-y-decisiones.md) | **Aprobaciones pendientes** |
+| [riesgos-y-decisiones.md](riesgos-y-decisiones.md) | Aprobaciones (D1–D9 locked) |
+| [lab-stellar-testnet.md](lab-stellar-testnet.md) | Runbook lab Stellar Testnet (stretch) |
 
 ## Qué no hacer todavía
 
