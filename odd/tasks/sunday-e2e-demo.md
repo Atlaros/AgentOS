@@ -29,3 +29,4 @@
 - **L2** Locked recommended D1–D9; MCP/Stellar deferred for Sunday; package layout collapsed to single `agentos` installable with domain modules (still modular monolith, no Factory).
 - **L3** 2026-11-20: Fake E2E path implemented. `uv run pytest` → 5 passed (unit+integration). `scripts/demo_e2e.sh` walkthrough. API on :8080, Postgres :5433.
 - **L4** 2026-11-20: Stellar Testnet adapter + registry (mainnet denied); wallets may link `stellar/testnet`; bootstrap seeds testnet XLM asset; lab runbook `docs/lab-stellar-testnet.md`. Signer only via `AGENTOS_STELLAR_SECRET_KEY`. Live Testnet payment confirmed via adapter; Friendbot needs User-Agent. pytest 10 passed.
+- **L5** User asked to finish including Phase 8 today. Phase 8 delivered as Agent-IA-shaped client inside AgentOS (`examples/pilot_agent_ia_client.py`) — no Agent-IA/Factory repo edits (D9). Also Phase 7: `agentos-sdk` + `agentos-mcp` (tools → SDK → REST/policy).

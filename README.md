@@ -36,9 +36,29 @@ AGENTOS_RUN_INTEGRATION=1 uv run pytest -q
 ## Layout
 
 - `apps/api` — FastAPI entrypoint
-- `packages/agentos` — domain modules (identity, wallets, ops, policy, ledger, fake adapter)
+- `apps/mcp` — MCP server (tools call SDK → same policy)
+- `packages/agentos` — domain modules (identity, wallets, ops, policy, ledger, adapters)
+- `packages/agentos_sdk` — thin Python client
+- `examples/pilot_agent_ia_client.py` — Phase 8 Agent-IA-shaped consumer (no Agent-IA repo edits)
 - `migrations` — Alembic from `001` (new schema; not Factory)
 - `docs/` — ADRs and architecture
+
+## Phase 8 pilot (Agent-IA-shaped client)
+
+With API running:
+
+```bash
+uv run python examples/pilot_agent_ia_client.py
+```
+
+## MCP
+
+```bash
+export AGENTOS_BASE_URL=http://127.0.0.1:8080
+export AGENTOS_API_KEY=...
+export AGENTOS_ORGANIZATION_ID=...
+uv run agentos-mcp
+```
 
 ## Stellar Testnet (stretch)
 
@@ -46,5 +66,5 @@ Fake is the default Sunday demo. Optional real Testnet path: see [`docs/lab-stel
 
 ## Out of scope (for now)
 
-Custody · Mainnet · Fiat/Baneco · MCP (next) · Factory/Agent-IA code changes · commerce UI
+Custody · Mainnet · Fiat/Baneco · Factory/Agent-IA code changes · commerce UI · billing
 

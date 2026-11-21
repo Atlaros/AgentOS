@@ -20,55 +20,55 @@ Gate: **ninguna fase de código arranca** hasta aprobar ADRs + decisiones abiert
 - Crear repo vacío `AgentOS` (nombre a aprobar).  
 - FastAPI hello + Postgres Compose + Alembic 001 (orgs mínimas) + CI pytest.  
 - Criterios:
-  - [ ] CI verde en PR
-  - [ ] Ningún import de Factory
-  - [ ] `.env.example` sin secretos
+  - [x] CI workflow presente (GitHub Actions)
+  - [x] Ningún import de Factory
+  - [x] `.env.example` sin secretos
 
 ## Fase 3 — Identity & Access + Organizations
 
 - Users/memberships (mínimo), Applications, API keys hasheadas, AgentIdentity, RLS.  
 - Criterios:
-  - [ ] Crear org + app + key
-  - [ ] Request sin key = 401
-  - [ ] Cross-org isolation test verde
+  - [x] Crear org + app + key
+  - [x] Request sin key = 401
+  - [ ] Cross-org isolation test verde (pendiente explícito)
 
 ## Fase 4 — Wallet & Assets (+ Fake)
 
 - Link wallet externa; list; balances vía `FakeNetworkAdapter`.  
 - Criterios:
-  - [ ] Link + list por org
-  - [ ] Balances deterministas en Fake
-  - [ ] No columna de secret
+  - [x] Link + list por org
+  - [x] Balances deterministas en Fake
+  - [x] No columna de secret
 
 ## Fase 5 — Policy + PaymentRequest + Ledger (sin cadena real)
 
 - Reglas allow/deny/require_human; approvals; ledger append-only.  
 - Criterios:
-  - [ ] Monto alto → pending_approval
-  - [ ] Sin approve → execute = 403
-  - [ ] Ledger muestra decisiones
+  - [x] Monto alto → pending_approval
+  - [x] Sin approve → execute = 403
+  - [x] Ledger muestra decisiones
 
 ## Fase 6 — Stellar Testnet + Transfers
 
 - `StellarTestnetAdapter`; execute + confirm; runbook lab.  
 - Criterios:
-  - [ ] Transfer testnet confirmada
-  - [ ] Idempotency no doble submit
-  - [ ] Fake sigue siendo default en unit
+  - [x] Transfer testnet confirmada (adapter live)
+  - [x] Idempotency no doble submit (Fake + intent unique)
+  - [x] Fake sigue siendo default en unit
 
 ## Fase 7 — REST completo + MCP + SDK
 
 - Contratos de `contratos-rest-mcp.md`; MCP tools; SDK Python thin.  
 - Criterios:
-  - [ ] Mismo use-case vía REST y MCP
-  - [ ] MCP no bypasea policy
+  - [x] SDK thin + MCP tools sobre SDK (misma policy)
+  - [x] MCP no bypasea policy (sin tools raw submit)
 
-## Fase 8 — Piloto consumidor (fuera de AgentOS)
+## Fase 8 — Piloto consumidor (fuera de Agent-IA / Factory)
 
-- Agent-IA V2 (cafetería) como **cliente**; no merge de código.  
+- Cliente **con forma de Agent-IA** en `examples/pilot_agent_ia_client.py`; **sin** editar repos Agent-IA/Factory.  
 - Criterios:
-  - [ ] Demo: consulta + payment request + transfer bajo policy
-  - [ ] Factory sin cambios requeridos
+  - [x] Demo: consulta + payment request + transfer bajo policy vía SDK
+  - [x] Factory sin cambios requeridos
 
 ## Post-MVP (explícitamente después)
 

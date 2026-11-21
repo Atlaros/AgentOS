@@ -7,14 +7,18 @@ requires-python = ">=3.12"
 dependencies = [
   "agentos",
   "agentos-api",
+  "agentos-sdk",
+  "agentos-mcp",
 ]
 
 [tool.uv.workspace]
-members = ["packages/agentos", "apps/api"]
+members = ["packages/agentos", "packages/agentos_sdk", "apps/api", "apps/mcp"]
 
 [tool.uv.sources]
 agentos = { workspace = true }
 agentos-api = { workspace = true }
+agentos-sdk = { workspace = true }
+agentos-mcp = { workspace = true }
 
 [dependency-groups]
 dev = [
@@ -37,4 +41,4 @@ target-version = "py312"
 [tool.mypy]
 python_version = "3.12"
 strict = true
-packages = ["agentos", "agentos_api"]
+packages = ["agentos", "agentos_api", "agentos_sdk", "agentos_mcp"]
