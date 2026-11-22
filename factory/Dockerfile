@@ -12,6 +12,7 @@ COPY packages ./packages
 COPY workers ./workers
 COPY db ./db
 COPY evals ./evals
+COPY scripts ./scripts
 
 # Editable install: the runtime locates db/migrations and db/seeds next to the packages.
 RUN pip install --no-cache-dir -e . \
@@ -24,4 +25,4 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
     CMD python -c "import os, urllib.request; urllib.request.urlopen(f'http://127.0.0.1:{os.environ.get(\"PORT\", \"8000\")}/health', timeout=4)"
 
-CMD ["factory-os-api"]
+CMD ["python", "scripts/render_boot.py"]

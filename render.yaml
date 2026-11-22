@@ -4,15 +4,27 @@
 # SAFETY — do NOT reuse café service names.
 # Live café (Agent-IAv2) owns: agent-ia-api, agent-ia-web.
 # This Blueprint creates NEW services only:
-#   factory-agentos-api · factory-agentos-web · factory-agentos-rails
+#   factory-agentos-db · factory-agentos-api · factory-agentos-web · factory-agentos-rails
 #
-# Free plan: spins down after 15 min idle; no private networking between free
-# web services — panel and Factory talk to APIs by public HTTPS URLs.
-# Free Render Postgres: at most one per workspace and expires in 30 days.
-# Use external Postgres (e.g. Supabase/Neon) via Dashboard secrets; never point
-# these services at the live café database.
+# One free Postgres instance (Render allows only one free DB per workspace).
+# Catalogs stay separate:
+#   factory_agentos  → factory-agentos-api (tables for Factory)
+#   agentos          → factory-agentos-rails (created at boot; tables for AgentOS)
+#
+# Free plan: web spins down after 15 min idle; free Postgres expires in 30 days
+# and has a 1 GB cap. Free web services talk to this DB over private network
+# (same region) but talk to each other by public HTTPS URLs.
 #
 # Secrets: sync: false → set in Render Dashboard; never commit them.
+
+databases:
+  - name: factory-agentos-db
+    plan: free
+    region: oregon
+    databaseName: factory_agentos
+    user: factory_agentos
+    # Private network only — free web services in oregon can still reach it.
+    ipAllowList: []
 
 services:
   - type: web
@@ -27,8 +39,11 @@ services:
     envVars:
       - key: AGENTOS_ENV
         value: lab
-      - key: AGENTOS_DATABASE_URL
-        sync: false
+      # Same instance as Factory; boot script creates DB `agentos` and migrates.
+      - key: SHARED_POSTGRES_URL
+        fromDatabase:
+          name: factory-agentos-db
+          property: connectionString
       - key: AGENTOS_BOOTSTRAP_TOKEN
         sync: false
       - key: AGENTOS_OAUTH_SIGNING_KEY
@@ -83,20 +98,21 @@ services:
         value: INFO
       - key: AUTH_MODE
         value: test
-      # Public URL of this API (set after first deploy).
-      - key: PUBLIC_BASE_URL
-        sync: false
-      - key: FRONTEND_ORIGIN
-        sync: false
-      # Lab Postgres only — never the café Supabase project.
       - key: DATABASE_URL
-        sync: false
-      - key: DATABASE_RUNTIME_URL
-        sync: false
+        fromDatabase:
+          name: factory-agentos-db
+          property: connectionString
+      # Boot creates role factory_runtime (NOBYPASSRLS) with this password.
+      - key: DATABASE_RUNTIME_PASSWORD
+        generateValue: true
       - key: OWNER_DASHBOARD_TOKEN
         generateValue: true
       - key: JWT_SECRET
         generateValue: true
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false
       - key: GOOGLE_API_KEY
         sync: false
       - key: GEMINI_DEFAULT_MODEL_ID
