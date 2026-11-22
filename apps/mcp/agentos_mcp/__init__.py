@@ -1,1 +1,0 @@
-"""AgentOS MCP server package."""
