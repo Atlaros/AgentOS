@@ -1,0 +1,143 @@
+# Factory AgentOS · lab on Render (free compute).
+# Repo root Blueprint for the monorepo: factory/ + agentos/.
+#
+# SAFETY — do NOT reuse café service names.
+# Live café (Agent-IAv2) owns: agent-ia-api, agent-ia-web.
+# This Blueprint creates NEW services only:
+#   factory-agentos-api · factory-agentos-web · factory-agentos-rails
+#
+# Free plan: spins down after 15 min idle; no private networking between free
+# web services — panel and Factory talk to APIs by public HTTPS URLs.
+# Free Render Postgres: at most one per workspace and expires in 30 days.
+# Use external Postgres (e.g. Supabase/Neon) via Dashboard secrets; never point
+# these services at the live café database.
+#
+# Secrets: sync: false → set in Render Dashboard; never commit them.
+
+services:
+  - type: web
+    name: factory-agentos-rails
+    runtime: docker
+    region: oregon
+    plan: free
+    rootDir: agentos
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: AGENTOS_ENV
+        value: lab
+      - key: AGENTOS_DATABASE_URL
+        sync: false
+      - key: AGENTOS_BOOTSTRAP_TOKEN
+        sync: false
+      - key: AGENTOS_OAUTH_SIGNING_KEY
+        sync: false
+      - key: AGENTOS_OAUTH_TOKEN_TTL_SECONDS
+        value: "900"
+      - key: AGENTOS_AUTO_ALLOW_AMOUNT_MAX
+        value: "10"
+      # Optional Stellar / Pollar / Trustless Work — leave unset for Fake adapter.
+      - key: AGENTOS_STELLAR_SECRET_KEY
+        sync: false
+      - key: AGENTOS_STELLAR_HORIZON_URL
+        sync: false
+      - key: AGENTOS_STELLAR_NETWORK_PASSPHRASE
+        sync: false
+      - key: AGENTOS_POLLAR_API_KEY
+        sync: false
+      - key: AGENTOS_POLLAR_API_BASE
+        sync: false
+      - key: AGENTOS_TRUSTLESS_WORK_API_KEY
+        sync: false
+      - key: AGENTOS_TRUSTLESS_WORK_API_BASE
+        sync: false
+
+  - type: web
+    name: factory-agentos-api
+    runtime: docker
+    region: oregon
+    plan: free
+    rootDir: factory
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: CATALOG_SEED
+        value: cafe
+      - key: REDIS_URL
+        value: ""
+      - key: MODEL_PROVIDER
+        value: gemini
+      - key: WHATSAPP_OUTBOUND_PROVIDER
+        value: fake
+      - key: QR_PROVIDER
+        value: fake
+      - key: BANK_TX_PROVIDER
+        value: fake
+      - key: ENABLE_LIVE_PAYMENTS
+        value: "false"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: AUTH_MODE
+        value: test
+      # Public URL of this API (set after first deploy).
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false
+      # Lab Postgres only — never the café Supabase project.
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_RUNTIME_URL
+        sync: false
+      - key: OWNER_DASHBOARD_TOKEN
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: GEMINI_DEFAULT_MODEL_ID
+        sync: false
+      - key: MODEL_SECONDARY_PROVIDER
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_MODEL_ID
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL_ID
+        sync: false
+      - key: COHERE_API_KEY
+        sync: false
+      # Public URL of factory-agentos-rails (free tier has no private network).
+      - key: AGENTOS_BASE_URL
+        sync: false
+      - key: AGENTOS_ORGANIZATION_ID
+        sync: false
+      - key: AGENTOS_API_KEY
+        sync: false
+
+  - type: web
+    name: factory-agentos-web
+    runtime: docker
+    region: oregon
+    plan: free
+    rootDir: factory/apps/web
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /login
+    envVars:
+      # Public URL of factory-agentos-api (set after that service is live).
+      - key: API_INTERNAL_URL
+        sync: false
+      - key: OWNER_DASHBOARD_TOKEN
+        fromService:
+          type: web
+          name: factory-agentos-api
+          envVarKey: OWNER_DASHBOARD_TOKEN
+      - key: OWNER_DASHBOARD_USERNAME
+        sync: false

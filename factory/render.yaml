@@ -1,3 +1,7 @@
+# LEGACY — café / Agent-IA names (agent-ia-api, agent-ia-web).
+# Do not apply this file for Factory AgentOS. Use the monorepo root
+# ../render.yaml (factory-agentos-api / factory-agentos-web / factory-agentos-rails).
+#
 # Factory Agent OS · piloto en Render.
 # Secretos: sync: false → Render los pide en el Dashboard; nunca en git.
 # Base: Supabase us-west-2, misma zona que Render oregon (Render no tiene región en Sudamérica).
