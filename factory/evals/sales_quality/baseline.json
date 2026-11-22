@@ -1,0 +1,81 @@
+{
+  "measured_at": "2026-09-26",
+  "model_provider": "fake",
+  "catalog": "closet+pay_test",
+  "note": "Baseline after removing catalog_dummy_10; corpus uses Excel Closet + pago1–pago4.",
+  "cases": 25,
+  "passed": 25,
+  "failed": 0,
+  "pass_rate": 1.0,
+  "by_failure": {
+    "F1": {
+      "pass": 2,
+      "fail": 0
+    },
+    "F2": {
+      "pass": 2,
+      "fail": 0
+    },
+    "F3": {
+      "pass": 3,
+      "fail": 0
+    },
+    "F4": {
+      "pass": 3,
+      "fail": 0
+    },
+    "F5": {
+      "pass": 5,
+      "fail": 0
+    },
+    "F6": {
+      "pass": 4,
+      "fail": 0
+    },
+    "F7": {
+      "pass": 3,
+      "fail": 0
+    },
+    "F8": {
+      "pass": 3,
+      "fail": 0
+    }
+  },
+  "criteria": {
+    "address_tu": {
+      "ok": 14,
+      "n": 14,
+      "rate": 1.0
+    },
+    "answers_request": {
+      "ok": 18,
+      "n": 18,
+      "rate": 1.0
+    },
+    "has_advance_question": {
+      "ok": 8,
+      "n": 8,
+      "rate": 1.0
+    },
+    "max_three_options": {
+      "ok": 10,
+      "n": 10,
+      "rate": 1.0
+    },
+    "no_internal_jargon": {
+      "ok": 23,
+      "n": 23,
+      "rate": 1.0
+    },
+    "no_repeat_list": {
+      "ok": 1,
+      "n": 1,
+      "rate": 1.0
+    },
+    "respects_budget": {
+      "ok": 4,
+      "n": 4,
+      "rate": 1.0
+    }
+  }
+}

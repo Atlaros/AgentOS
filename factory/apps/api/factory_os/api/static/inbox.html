@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Closet · mesa de chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500&family=IBM+Plex+Mono:wght@400;500&family=Karla:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --velvet: #2a1420;
+      --velvet-deep: #1a0c14;
+      --ticket: #f6efe3;
+      --ticket-edge: #e6d7c2;
+      --brass: #e0b45a;
+      --carmine: #c43b4b;
+      --stitch: #a89888;
+      --ink: #2a1420;
+      --ok: #3f6f5b;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      background: radial-gradient(1200px 600px at 10% -10%, #4a2436 0%, var(--velvet-deep) 55%);
+      color: var(--ticket);
+      font-family: Karla, sans-serif;
+      overflow: hidden;
+    }
+    .desk {
+      display: grid;
+      grid-template-columns: minmax(260px, 34%) minmax(0, 1fr);
+      grid-template-rows: minmax(0, 1fr);
+      height: 100dvh;
+      overflow: hidden;
+    }
+    .rail {
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid color-mix(in srgb, var(--brass) 40%, transparent);
+      padding: 1.4rem 1rem 1rem;
+      background: linear-gradient(180deg, color-mix(in srgb, #4a2436 70%, black), transparent);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      margin-bottom: 1.2rem;
+    }
+    .pin {
+      width: 18px; height: 28px;
+      border: 2px solid var(--brass);
+      border-radius: 9px 9px 4px 4px;
+      position: relative;
+    }
+    .pin::after {
+      content: "";
+      position: absolute;
+      left: 5px; top: 16px;
+      width: 4px; height: 14px;
+      background: var(--brass);
+      border-radius: 2px;
+    }
+    .pin.live { animation: pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { filter: drop-shadow(0 0 0 var(--brass)); }
+      50% { filter: drop-shadow(0 0 8px var(--brass)); }
+    }
+    h1 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin: 0;
+      letter-spacing: .02em;
+    }
+    .lede { color: var(--stitch); font-size: .9rem; margin: 0 0 1rem; }
+    .tickets {
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+      overflow: auto;
+      min-height: 0;
+      flex: 1;
+      scrollbar-width: auto;
+      scrollbar-color: var(--brass) var(--velvet-deep);
+    }
+    .ticket {
+      background: var(--ticket);
+      color: var(--ink);
+      border: 0;
+      text-align: left;
+      padding: .85rem .9rem .85rem 1.3rem;
+      cursor: pointer;
+      position: relative;
+      clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+      box-shadow: 0 8px 0 -6px var(--brass);
+    }
+    .ticket::before {
+      content: "";
+      position: absolute;
+      left: 10px; top: 50%;
+      width: 8px; height: 8px;
+      transform: translateY(-50%);
+      border-radius: 50%;
+      background: var(--velvet);
+      box-shadow: inset 0 0 0 2px var(--brass);
+    }
+    .ticket.active { outline: 2px solid var(--brass); }
+    .ticket .wa { font-family: "IBM Plex Mono", monospace; font-size: .75rem; color: #6b4e3d; }
+    .ticket .preview { margin: .25rem 0 0; font-size: .92rem; }
+    .flag {
+      display: inline-block;
+      font-size: .68rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--carmine);
+      font-weight: 700;
+    }
+    .stage {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      height: 100%;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .customer {
+      padding: 1.2rem 1.6rem .8rem;
+      border-bottom: 1px dashed color-mix(in srgb, var(--brass) 45%, transparent);
+    }
+    .customer h2 { font-family: "Cormorant Garamond", serif; margin: 0; font-size: 1.7rem; }
+    .meta { font-family: "IBM Plex Mono", monospace; color: var(--stitch); font-size: .8rem; margin-top: .2rem; }
+    .banner {
+      margin-top: .7rem;
+      color: var(--brass);
+      font-size: .9rem;
+    }
+    .thread {
+      overflow-y: scroll;
+      min-height: 0;
+      padding: 1.2rem 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+      scrollbar-width: auto;
+      scrollbar-color: var(--brass) var(--velvet-deep);
+    }
+    .thread::-webkit-scrollbar,
+    .tickets::-webkit-scrollbar { width: 12px; }
+    .thread::-webkit-scrollbar-track,
+    .tickets::-webkit-scrollbar-track { background: var(--velvet-deep); }
+    .thread::-webkit-scrollbar-thumb,
+    .tickets::-webkit-scrollbar-thumb { background: var(--brass); border-radius: 6px; }
+    .bubble {
+      max-width: min(36rem, 78%);
+      padding: .7rem .85rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .bubble.customer { align-self: flex-start; background: #3a1d2c; border-left: 3px solid var(--brass); }
+    .bubble.Humano { align-self: flex-end; background: var(--ticket); color: var(--ink); }
+    .bubble.Adri, .bubble.Cobros, .bubble.Operaciones, .bubble.Closet {
+      align-self: flex-end;
+      background: #412433;
+      border-right: 3px solid var(--ok);
+    }
+    .who { font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--stitch); margin-bottom: .2rem; }
+    .composer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: .6rem;
+      padding: 1rem 1.6rem 1.3rem;
+      background: color-mix(in srgb, var(--velvet) 80%, black);
+    }
+    textarea {
+      resize: none;
+      min-height: 72px;
+      border: 1px solid color-mix(in srgb, var(--brass) 50%, transparent);
+      background: var(--velvet-deep);
+      color: var(--ticket);
+      font: inherit;
+      padding: .7rem;
+    }
+    button.act {
+      font: inherit;
+      background: var(--brass);
+      color: var(--velvet-deep);
+      border: 0;
+      padding: .7rem 1rem;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .row { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .6rem; }
+    button.ghost {
+      background: transparent;
+      color: var(--ticket);
+      border: 1px solid var(--brass);
+      font: inherit;
+      padding: .45rem .7rem;
+      cursor: pointer;
+    }
+    .empty { color: var(--stitch); padding: 2rem 1.6rem; }
+    @media (max-width: 800px) {
+      .desk {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(0, 38dvh) minmax(0, 1fr);
+      }
+      .rail { height: auto; }
+      .tickets { flex: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pin.live { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="desk">
+    <aside class="rail">
+      <div class="brand">
+        <div class="pin" id="pin" aria-hidden="true"></div>
+        <div>
+          <h1>Mesa Closet</h1>
+          <p class="lede">Chats de WhatsApp, casi al segundo. El alfiler late cuando entra uno nuevo.</p>
+        </div>
+      </div>
+      <div class="tickets" id="tickets"></div>
+    </aside>
+    <section class="stage">
+      <header class="customer" id="header">
+        <h2>Elegí un ticket</h2>
+        <div class="meta">Los clientes escriben por WhatsApp. Vos podés entrar cuando Adri se traba.</div>
+      </header>
+      <div class="thread" id="thread"></div>
+      <form class="composer" id="form">
+        <textarea id="draft" placeholder="Escribí como si estuvieras en WhatsApp…" disabled></textarea>
+        <div>
+          <button class="act" id="send" type="submit" disabled>Enviar</button>
+          <div class="row">
+            <button class="ghost" id="take" type="button" disabled>Entrar al chat</button>
+            <button class="ghost" id="release" type="button" disabled>Devolver a Adri</button>
+          </div>
+        </div>
+      </form>
+    </section>
+  </main>
+  <script>
+    const ticketsEl = document.getElementById("tickets");
+    const threadEl = document.getElementById("thread");
+    const headerEl = document.getElementById("header");
+    const draftEl = document.getElementById("draft");
+    const sendEl = document.getElementById("send");
+    const takeEl = document.getElementById("take");
+    const releaseEl = document.getElementById("release");
+    const pinEl = document.getElementById("pin");
+    const params = new URLSearchParams(location.search);
+    let current = params.get("c");
+    let known = 0;
+
+    function flash() {
+      pinEl.classList.add("live");
+      setTimeout(() => pinEl.classList.remove("live"), 2400);
+    }
+
+    async function loadList() {
+      const res = await fetch("/api/conversations");
+      const data = await res.json();
+      const items = data.conversations || [];
+      const count = items.reduce((n, c) => n + (c.message_count || 0), 0);
+      if (known && count > known) flash();
+      known = count;
+      ticketsEl.innerHTML = items.length ? "" : '<p class="lede">Todavía no hay chats. Cuando alguien escriba por WhatsApp, el ticket aparece aquí.</p>';
+      for (const item of items) {
+        const btn = document.createElement("button");
+        btn.className = "ticket" + (item.id === current ? " active" : "");
+        btn.innerHTML = `<div class="wa">${item.wa_number}</div>
+          <div class="preview">${(item.name || "Cliente") + " · " + (item.last_text || "").slice(0, 80)}</div>
+          ${item.needs_human || item.human_takeover ? '<div class="flag">Necesita persona</div>' : ""}`;
+        btn.onclick = () => { current = item.id; history.replaceState(null, "", "?c=" + item.id); loadDetail(); loadList(); };
+        ticketsEl.appendChild(btn);
+      }
+      if (!current && items[0]) {
+        current = items[0].id;
+        history.replaceState(null, "", "?c=" + current);
+      }
+    }
+
+    async function loadDetail() {
+      if (!current) return;
+      const res = await fetch("/api/conversations/" + current);
+      if (!res.ok) return;
+      const conv = await res.json();
+      const who = conv.name || "Cliente";
+      headerEl.innerHTML = `<h2>${who}</h2>
+        <div class="meta">${conv.wa_number}${conv.address ? " · " + conv.address : ""}</div>
+        <div class="banner">${conv.human_takeover ? "Vos estás en el chat. Adri está en silencio." : conv.needs_human ? "Adri se trabó. Entrá al chat cuando puedas." : "Adri está contestando. Podés entrar igual."}</div>`;
+      const stick =
+        threadEl.scrollHeight - threadEl.scrollTop - threadEl.clientHeight < 120;
+      threadEl.innerHTML = "";
+      for (const msg of conv.messages || []) {
+        const div = document.createElement("div");
+        const klass = msg.role === "customer" ? "customer" : msg.role;
+        div.className = "bubble " + klass;
+        div.innerHTML = `<div class="who">${msg.role}</div>${msg.text}`;
+        threadEl.appendChild(div);
+      }
+      if (stick) threadEl.scrollTop = threadEl.scrollHeight;
+      const live = !!conv.human_takeover;
+      draftEl.disabled = !live;
+      sendEl.disabled = !live;
+      takeEl.disabled = live;
+      releaseEl.disabled = !live;
+    }
+
+    document.getElementById("form").onsubmit = async (ev) => {
+      ev.preventDefault();
+      if (!current || !draftEl.value.trim()) return;
+      await fetch("/api/conversations/" + current + "/reply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: draftEl.value })
+      });
+      draftEl.value = "";
+      await loadDetail();
+      await loadList();
+    };
+    takeEl.onclick = async () => {
+      if (!current) return;
+      await fetch("/api/conversations/" + current + "/takeover", { method: "POST" });
+      await loadDetail();
+    };
+    releaseEl.onclick = async () => {
+      if (!current) return;
+      await fetch("/api/conversations/" + current + "/release", { method: "POST" });
+      await loadDetail();
+    };
+
+    async function tick() {
+      await loadList();
+      await loadDetail();
+    }
+    tick();
+    setInterval(tick, 1500);
+    try {
+      const src = new EventSource("/api/events");
+      src.onmessage = () => tick();
+    } catch (err) { /* polling cubre el hueco */ }
+  </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+{
+  "bundle_name": "agent-v2-conversation-knowledge",
+  "version": "1.1.0",
+  "adopted_at": "2026-09-22",
+  "curated_at": "2026-09-22",
+  "status": "indexed",
+  "status_note": "Canonical playbook indexed in conversation_playbook (pgvector). Max 2 hits/turn as SalesDecision READ hints. Anti-patterns not indexed. Examples never business facts.",
+  "authority": {
+    "business_facts": "catalog.search + shop_knowledge only",
+    "conversation_behavior": "05_playbook_curated.json → conversation_playbook / PlaybookIndex",
+    "seller": "LLM SalesDecision (ADR-003)",
+    "operations": "ToolRuntime / BBE / Policy"
+  },
+  "components": [
+    {
+      "file": "01_convrec_patterns.json",
+      "role": "evidence_and_design",
+      "index_now": false,
+      "sha256": "f2680dfc008b8c811f488fabd813494db3a876573997aa9a355a528f4b630f74",
+      "source_dataset": "ConvApparel / ConvRec shopping study (footwear)",
+      "source_url": "https://huggingface.co/datasets/google/ConvApparel",
+      "license": "CC-BY-4.0",
+      "records_analyzed": 3534,
+      "records_stored": 18
+    },
+    {
+      "file": "02_bitext_intent_taxonomy.json",
+      "role": "intent_taxonomy_eval",
+      "index_now": false,
+      "sha256": "64dbbc0b19956ddcbd4b834b70b5e4a3600856812634621de8a98357be13f9d8",
+      "source_dataset": "Bitext customer-support Spanish adaptation",
+      "source_url": "https://huggingface.co/datasets/Faramir/Bitext-customer-support-llm-chatbot-training-dataset-spanish",
+      "license": "CDLA-Sharing-1.0",
+      "records_analyzed": 26872,
+      "records_stored": 27
+    },
+    {
+      "file": "03_adri_business_patterns.json",
+      "role": "playbook_candidate",
+      "index_now": false,
+      "sha256": "8b233c4e51fc5af2d02bcfd51f76a1032684786acbede44d2a4d7d738705e41f",
+      "source_dataset": "Designed for Adri V2 from ConvRec + Bitext lessons",
+      "source_url": null,
+      "license": "project",
+      "records_analyzed": null,
+      "records_stored": 46
+    },
+    {
+      "file": "04_anti_patterns.json",
+      "role": "guardrails_and_eval",
+      "index_now": false,
+      "sha256": "2df0868255f5d3979ae80f05768e611341ba1cf27d27b7001ca4071ea9b4c83a",
+      "source_dataset": "Derived from ConvRec failures + Adri invariants",
+      "source_url": null,
+      "license": "project",
+      "records_analyzed": null,
+      "records_stored": 22
+    }
+  ],
+  "curated": [
+    {
+      "file": "05_playbook_curated.json",
+      "role": "canonical_playbook",
+      "index_now": true,
+      "sha256": "23a4958891d1c6253e3b6cce678a264bd297cadd05d08e9ee195a8467e5cbd08",
+      "records_stored": 51,
+      "note": "Indexed TK4; separate from product_embeddings / shop_knowledge."
+    },
+    {
+      "file": "05_anti_patterns_layered.json",
+      "role": "anti_patterns_by_layer",
+      "index_now": false,
+      "sha256": "c8143fbc74157275a3664ad6d5d662ed12b2fe1429fc41056b0c24e603cc3135",
+      "records_stored": 22,
+      "layers": {
+        "runtime": 8,
+        "state_validation": 5,
+        "quality_eval": 9
+      }
+    }
+  ],
+  "bundle": {
+    "file": "conversation_knowledge_bundle.json",
+    "sha256": "8efbe61c6d67fe0e87e4530b8947019537a70adc04a216ae4221b2b2a6396c0b",
+    "note": "Exact consolidation of components 01–04 only. Curated 05_* are separate."
+  },
+  "not_adopted": [
+    {
+      "name": "SIMMC 2.x",
+      "reason": "CC-BY-NC-SA; Closet aims at commercial use"
+    },
+    {
+      "name": "VOGUE product images/metadata",
+      "reason": "research-only / non-commercial restriction on catalog assets"
+    }
+  ],
+  "known_gaps_before_index": [
+    "Bitext includes intents without tools (invoice, account, newsletter, refund write) — eval filter only",
+    "Example utterances are not facts — example_is_not_fact=true on every playbook row",
+    "Index only after SalesDecision (Fase 1); max 2 positive pattern hits / turn (TK4)"
+  ],
+  "resolved_by_tk3": [
+    "Seven exact intent overlaps 01↔03: Adri kept, ConvRec listed in supersedes",
+    "Free-form next_actions mapped to 10 NextAction + Adri skill + allowed_tools",
+    "Anti-patterns split into runtime / state_validation / quality_eval",
+    "Closet gates: no reserva WRITE; returns/exchanges → shop_answer_only; tracking → handoff; payment QR → Cobros"
+  ],
+  "indexed_at": "2026-09-22"
+}

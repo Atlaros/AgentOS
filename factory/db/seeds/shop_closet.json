@@ -1,0 +1,99 @@
+{
+  "tenant_id": "dddddddd-dddd-dddd-dddd-dddddddddddd",
+  "profile": {
+    "name": "Authentic Closet",
+    "summary": "Tienda digital de ropa femenina en tendencia. Canal principal: TikTok Live; también WhatsApp.",
+    "categories": [
+      "Blusas",
+      "Tops",
+      "Poleras",
+      "Vestidos",
+      "Pantalones",
+      "Jeans",
+      "Faldas",
+      "Conjuntos",
+      "Chaquetas"
+    ],
+    "audience": "Mujeres interesadas en moda y tendencias, sobre todo en redes y TikTok.",
+    "differentiator": "Mostramos las prendas en TikTok Live y resolvemos consultas en tiempo real.",
+    "hours": "9:00 a 21:00",
+    "contact_phone": "78629237",
+    "currency": "BOB",
+    "payment": "QR",
+    "channels": ["TikTok Live", "WhatsApp"],
+    "tiktok": "https://www.tiktok.com/@authentic.closet1",
+    "tiktok_handle": "@authentic.closet1",
+    "delivery": true,
+    "pickup": false,
+    "delivery_zones": "todo Bolivia",
+    "delivery_cost": "según distancia; no inventar un monto",
+    "eta_santa_cruz": "al día siguiente",
+    "eta_bolivia": "2 a 4 días según localidad y transporte"
+  },
+  "policies": {
+    "returns": false,
+    "exchanges": false,
+    "cancel": "Sí, antes del envío y antes de las 9:00.",
+    "warranty": "Ropa de calidad, en perfecto estado. No inventar coberturas extra.",
+    "payment_window_min": 15,
+    "delivery_only": true,
+    "promos": "Solo las anunciadas en el live y los precios vigentes del catálogo. No inventar descuentos.",
+    "claims": "Chat de la tienda o llamada al encargado (78629237).",
+    "order_status": "Con el id de pedido que se da después del pago; se pide el lugar de entrega."
+  },
+  "voice": {
+    "address": "tú",
+    "traits": ["amable", "cercana", "profesional", "informal", "directa", "entusiasta"],
+    "emojis": "moderate"
+  },
+  "faqs": [
+    {
+      "id": "delivery",
+      "category": "Delivery",
+      "question": "¿Hacen delivery?",
+      "answer": "Sí, hacemos delivery a todo Bolivia. El costo es según distancia. En Santa Cruz de la Sierra llega al día siguiente; al resto del país, de 2 a 4 días según localidad y transporte. No hay retiro en tienda."
+    },
+    {
+      "id": "tiktok-buy",
+      "category": "Pedidos",
+      "question": "¿Cómo puedo comprar una prenda que vi en TikTok Live?",
+      "answer": "Pásame el código del live y, si puedes, modelo, color y talla. Verifico en el catálogo y te digo cómo seguir con el pedido."
+    },
+    {
+      "id": "availability",
+      "category": "Productos",
+      "question": "¿Cómo sé si una prenda está disponible?",
+      "answer": "Indícame el código del live o el modelo, color y talla. Consulto stock y precio vigentes en el catálogo antes de confirmar."
+    },
+    {
+      "id": "sizes",
+      "category": "Productos",
+      "question": "¿Qué tallas tienen?",
+      "answer": "Las tallas dependen de cada prenda. Dime el modelo y verifico las tallas disponibles en el catálogo."
+    },
+    {
+      "id": "colors",
+      "category": "Productos",
+      "question": "¿Tienen diferentes colores?",
+      "answer": "Los colores dependen de cada modelo. Dime qué prenda te interesa y verifico las opciones en el catálogo."
+    },
+    {
+      "id": "price",
+      "category": "Precios",
+      "question": "¿Cuánto cuesta?",
+      "answer": "El precio depende de la prenda. Dime cuál te interesa (código o descripción) y te paso el precio vigente del catálogo. No invento montos."
+    },
+    {
+      "id": "pay",
+      "category": "Pagos",
+      "question": "¿Cómo puedo pagar?",
+      "answer": "Solo por QR, en bolivianos. Cuando hay pedido, Cobros emite el QR; tenés 15 minutos para pagar después de la reserva. El chat no confirma el pago."
+    },
+    {
+      "id": "where",
+      "category": "Canales",
+      "question": "¿Dónde puedo ver las prendas?",
+      "answer": "El canal principal es TikTok Live: @authentic.closet1 (https://www.tiktok.com/@authentic.closet1). Ahí mostramos las prendas y respondemos consultas. También te atiendo por este chat."
+    }
+  ]
+}

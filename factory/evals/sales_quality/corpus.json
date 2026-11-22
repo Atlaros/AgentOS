@@ -1,0 +1,653 @@
+{
+  "version": "1.0.0",
+  "description": "Sales quality corpus derived from Closet failures F1–F8 (baseline measure, Fase 0).",
+  "criteria_keys": [
+    "answers_request",
+    "no_repeat_list",
+    "respects_budget",
+    "max_three_options",
+    "has_advance_question",
+    "no_internal_jargon",
+    "address_tu"
+  ],
+  "cases": [
+    {
+      "id": "sq_01_f1_hola_midchat",
+      "failure": "F1",
+      "title": "hola a mitad no reenvía hits",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "estoy buscando blusas"
+        },
+        {
+          "role": "customer",
+          "text": "hola"
+        }
+      ],
+      "expect": {
+        "last_must_not_match": [
+          "(?i)encontr[eé] estas opciones"
+        ],
+        "last_must_not_contain": [
+          "código p001",
+          "código b001"
+        ],
+        "checks": [
+          "answers_request",
+          "no_repeat_list",
+          "no_internal_jargon",
+          "address_tu"
+        ]
+      }
+    },
+    {
+      "id": "sq_02_f2_no_regreet",
+      "failure": "F2",
+      "title": "segundo turno no vuelve a saludar",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "hola"
+        },
+        {
+          "role": "customer",
+          "text": "busco blusas"
+        }
+      ],
+      "expect": {
+        "last_must_not_match": [
+          "(?i)^\\s*(¡?hola|holi|buenas)"
+        ],
+        "last_must_match": [
+          "(?i)presupuesto|talla|ocasi"
+        ],
+        "checks": [
+          "answers_request",
+          "no_internal_jargon",
+          "address_tu",
+          "has_advance_question"
+        ]
+      }
+    },
+    {
+      "id": "sq_03_f3_budget_search",
+      "failure": "F3",
+      "title": "presupuesto 50 bs busca, no objeción",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "blusas hasta 50 bs"
+        }
+      ],
+      "expect": {
+        "last_must_not_contain": [
+          "descuento inventado",
+          "20%"
+        ],
+        "last_must_not_match": [
+          "(?i)160\\.00"
+        ],
+        "checks": [
+          "answers_request",
+          "respects_budget",
+          "max_three_options",
+          "no_internal_jargon",
+          "address_tu"
+        ]
+      }
+    },
+    {
+      "id": "sq_04_f3_budget_one_bob_not_objection",
+      "failure": "F3",
+      "title": "1 bs no trata como objeción de precio",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "tiene alguna que cueste 1 bs?"
+        }
+      ],
+      "expect": {
+        "last_must_not_contain": [
+          "descuento inventado"
+        ],
+        "last_must_not_match": [
+          "(?i)prueba pago"
+        ],
+        "checks": [
+          "answers_request",
+          "respects_budget",
+          "no_internal_jargon",
+          "address_tu"
+        ]
+      }
+    },
+    {
+      "id": "sq_05_f4_exact_code_closes",
+      "failure": "F4",
+      "title": "código exacto cierra pedido",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "quiero la blusa pago1"
+        }
+      ],
+      "expect": {
+        "last_must_contain": [
+          "Te paso con Cobros para el QR"
+        ],
+        "last_must_contain_any": [
+          "pago1",
+          "Cobros"
+        ],
+        "checks": [
+          "answers_request",
+          "no_internal_jargon",
+          "address_tu"
+        ]
+      }
+    },
+    {
+      "id": "sq_06_f4_code_not_mixed",
+      "failure": "F4",
+      "title": "pago1 no mezcla otras prendas en el cierre",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "quiero la blusa pago1"
+        }
+      ],
+      "expect": {
+        "last_must_contain": [
+          "Te paso con Cobros para el QR"
+        ],
+        "last_must_not_contain": [
+          "chaleco",
+          "seda"
+        ],
+        "checks": [
+          "answers_request"
+        ]
+      }
+    },
+    {
+      "id": "sq_07_f5_list_has_question",
+      "failure": "F5",
+      "title": "categoría blusas pide discovery antes de listar",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "estoy buscando blusas"
+        }
+      ],
+      "expect": {
+        "last_must_match": [
+          "(?i)presupuesto|talla|ocasi|\\?"
+        ],
+        "last_must_not_contain": [
+          "Encontré estas opciones"
+        ],
+        "checks": [
+          "answers_request",
+          "has_advance_question",
+          "no_internal_jargon",
+          "address_tu"
+        ]
+      }
+    },
+    {
+      "id": "sq_08_f5_highlight",
+      "failure": "F5",
+      "title": "destaca una opción",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "mostrame blusas"
+        },
+        {
+          "role": "customer",
+          "text": "talla M"
+        }
+      ],
+      "expect": {
+        "last_must_contain_any": [
+          "destaco",
+          "destac"
+        ],
+        "option_lines_max": 3,
+        "checks": [
+          "max_three_options",
+          "has_advance_question",
+          "no_internal_jargon"
+        ]
+      }
+    },
+    {
+      "id": "sq_09_f5_vague_gift_discovers",
+      "failure": "F5",
+      "title": "regalo pide discovery antes de listar a ciegas",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "Necesito algo para regalarle a mi esposa."
+        }
+      ],
+      "expect": {
+        "last_must_match": [
+          "(?i)presupuesto|ocasi[oó]n|\\?"
+        ],
+        "last_must_not_contain": [
+          "No encontré esa prenda"
+        ],
+        "checks": [
+          "answers_request",
+          "has_advance_question",
+          "address_tu",
+          "no_internal_jargon"
+        ]
+      }
+    },
+    {
+      "id": "sq_10_f6_no_archivo_jargon",
+      "failure": "F6",
+      "title": "sin jerga de archivo",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "quiero una blusa de seda"
+        }
+      ],
+      "expect": {
+        "last_must_not_contain": [
+          "archivo",
+          "no inventados",
+          "QR:fake"
+        ],
+        "checks": [
+          "answers_request",
+          "no_internal_jargon",
+          "max_three_options",
+          "address_tu"
+        ]
+      }
+    },
+    {
+      "id": "sq_11_f6_no_sku_internal",
+      "failure": "F6",
+      "title": "lista muestra código de cliente no SKU interno",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "busco blusas de seda"
+        }
+      ],
+      "expect": {
+        "last_must_not_contain": [
+          "AC-TEST-PAY",
+          "archivo"
+        ],
+        "last_must_contain_any": [
+          "blusa",
+          "seda",
+          "BOB"
+        ],
+        "checks": [
+          "no_internal_jargon",
+          "max_three_options"
+        ]
+      }
+    },
+    {
+      "id": "sq_12_f7_hide_pago_in_browse",
+      "failure": "F7",
+      "title": "browse blusas no muestra prueba pago",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "estoy buscando blusas"
+        },
+        {
+          "role": "customer",
+          "text": "talla M"
+        }
+      ],
+      "expect": {
+        "last_must_not_contain": [
+          "pago1",
+          "pago2",
+          "prueba pago"
+        ],
+        "checks": [
+          "answers_request",
+          "max_three_options",
+          "no_internal_jargon"
+        ]
+      }
+    },
+    {
+      "id": "sq_13_f7_exact_pago_ok",
+      "failure": "F7",
+      "title": "código pago2 sigue accesible",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "quiero la blusa pago2"
+        }
+      ],
+      "expect": {
+        "last_must_contain": [
+          "Te paso con Cobros para el QR"
+        ],
+        "last_must_contain_any": [
+          "pago2"
+        ],
+        "checks": [
+          "answers_request"
+        ]
+      }
+    },
+    {
+      "id": "sq_14_f8_address_tu",
+      "failure": "F8",
+      "title": "trato de tú en saludo",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "hola"
+        }
+      ],
+      "expect": {
+        "last_must_not_match": [
+          "(?i)\\b(decime|querés|tenés|buscás|mostrame)\\b"
+        ],
+        "last_must_match": [
+          "(?i)\\b(dime|buscas|tienes|te)\\b"
+        ],
+        "checks": [
+          "address_tu",
+          "no_internal_jargon"
+        ]
+      }
+    },
+    {
+      "id": "sq_15_f8_no_voseo_in_list",
+      "failure": "F8",
+      "title": "lista sin voseo",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "vestidos"
+        }
+      ],
+      "expect": {
+        "last_must_not_match": [
+          "(?i)\\b(decime|querés|tenés|buscás)\\b"
+        ],
+        "checks": [
+          "address_tu",
+          "max_three_options",
+          "no_internal_jargon"
+        ]
+      }
+    },
+    {
+      "id": "sq_16_f1_reset_phrase",
+      "failure": "F1",
+      "title": "empezar de nuevo limpia contexto",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "estoy buscando blusas"
+        },
+        {
+          "role": "customer",
+          "text": "empecemos de nuevo"
+        }
+      ],
+      "expect": {
+        "last_must_match": [
+          "(?i)hola|adri|busca"
+        ],
+        "checks": [
+          "answers_request",
+          "address_tu",
+          "no_internal_jargon"
+        ]
+      }
+    },
+    {
+      "id": "sq_17_f2_followup_size",
+      "failure": "F2",
+      "title": "follow-up talla no re-saluda",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "busco blusas"
+        },
+        {
+          "role": "customer",
+          "text": "talla M"
+        }
+      ],
+      "expect": {
+        "last_must_not_match": [
+          "(?i)^\\s*¡?hola"
+        ],
+        "checks": [
+          "answers_request",
+          "no_internal_jargon",
+          "address_tu",
+          "max_three_options"
+        ]
+      }
+    },
+    {
+      "id": "sq_18_f3_budget_after_browse",
+      "failure": "F3",
+      "title": "presupuesto después de browse",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "estoy buscando blusas"
+        },
+        {
+          "role": "customer",
+          "text": "máximo 100 bob"
+        }
+      ],
+      "expect": {
+        "last_must_not_contain": [
+          "descuento inventado"
+        ],
+        "checks": [
+          "respects_budget",
+          "max_three_options",
+          "no_internal_jargon",
+          "has_advance_question"
+        ]
+      }
+    },
+    {
+      "id": "sq_19_f5_wedding",
+      "failure": "F5",
+      "title": "boda elegante con opciones reales",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "Quiero algo elegante y económico para una boda."
+        }
+      ],
+      "expect": {
+        "last_must_not_contain": [
+          "No encontré esa prenda"
+        ],
+        "last_must_match": [
+          "\\?"
+        ],
+        "option_lines_max": 3,
+        "checks": [
+          "answers_request",
+          "max_three_options",
+          "has_advance_question",
+          "no_internal_jargon"
+        ]
+      }
+    },
+    {
+      "id": "sq_20_f4_confirm_after_show",
+      "failure": "F4",
+      "title": "confirmo cierra tras mostrar seda",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "quiero una blusa de seda"
+        },
+        {
+          "role": "customer",
+          "text": "confirmo"
+        }
+      ],
+      "expect": {
+        "checks": [
+          "answers_request",
+          "no_internal_jargon"
+        ],
+        "last_must_contain_any": [
+          "Te paso con Cobros para el QR",
+          "QR",
+          "Cobros",
+          "pagar"
+        ]
+      }
+    },
+    {
+      "id": "sq_21_f6_shop_delivery",
+      "failure": "F6",
+      "title": "delivery desde ficha sin inventar",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "hacen delivery?"
+        }
+      ],
+      "expect": {
+        "last_must_not_contain": [
+          "archivo",
+          "QR:fake",
+          "AC-TEST"
+        ],
+        "last_must_contain_any": [
+          "delivery",
+          "Bolivia",
+          "envío",
+          "envio"
+        ],
+        "checks": [
+          "answers_request",
+          "no_internal_jargon",
+          "address_tu"
+        ]
+      }
+    },
+    {
+      "id": "sq_22_f6_no_returns_invent",
+      "failure": "F6",
+      "title": "devoluciones según política",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "aceptan devoluciones?"
+        }
+      ],
+      "expect": {
+        "last_must_not_contain": [
+          "archivo"
+        ],
+        "last_must_match": [
+          "(?i)no|devoluci"
+        ],
+        "checks": [
+          "answers_request",
+          "no_internal_jargon"
+        ]
+      }
+    },
+    {
+      "id": "sq_23_f5_compare_soft",
+      "failure": "F5",
+      "title": "comparar tras ver opciones",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "busco blusas"
+        },
+        {
+          "role": "customer",
+          "text": "talla M"
+        },
+        {
+          "role": "customer",
+          "text": "cuál me conviene entre esas?"
+        }
+      ],
+      "expect": {
+        "last_must_match": [
+          "\\?"
+        ],
+        "option_lines_max": 3,
+        "checks": [
+          "answers_request",
+          "max_three_options",
+          "has_advance_question",
+          "no_internal_jargon"
+        ]
+      }
+    },
+    {
+      "id": "sq_24_f7_budget_hides_test",
+      "failure": "F7",
+      "title": "budget 1 bs no saca prueba pago",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "blusas de 1 bs"
+        }
+      ],
+      "expect": {
+        "last_must_not_contain": [
+          "pago1",
+          "pago2",
+          "prueba pago"
+        ],
+        "checks": [
+          "respects_budget",
+          "no_internal_jargon"
+        ]
+      }
+    },
+    {
+      "id": "sq_25_f8_discovery_tu",
+      "failure": "F8",
+      "title": "discovery en tú",
+      "turns": [
+        {
+          "role": "customer",
+          "text": "Necesito algo para regalarle a mi esposa."
+        }
+      ],
+      "expect": {
+        "last_must_not_match": [
+          "(?i)\\b(tenés|decime|querés)\\b"
+        ],
+        "last_must_match": [
+          "(?i)\\b(tienes|dime|presupuesto|ocasi)\\b"
+        ],
+        "checks": [
+          "address_tu",
+          "has_advance_question",
+          "no_internal_jargon"
+        ]
+      }
+    }
+  ]
+}

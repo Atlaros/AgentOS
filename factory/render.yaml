@@ -1,0 +1,107 @@
+# Factory Agent OS · piloto en Render.
+# Secretos: sync: false → Render los pide en el Dashboard; nunca en git.
+# Base: Supabase us-west-2, misma zona que Render oregon (Render no tiene región en Sudamérica).
+# DATABASE_URL y DATABASE_RUNTIME_URL: Session pooler de Supabase (IPv4), usuario `<rol>.<ref>`.
+# Plan free (decisión owner): se apaga tras 15 min sin tráfico y no recibe red privada,
+# así que el panel llama a la API por su URL pública con el token del dueño.
+
+services:
+  - type: web
+    name: agent-ia-api
+    runtime: docker
+    region: oregon
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: CATALOG_SEED
+        value: closet
+      - key: PILOT_TENANT_ID
+        value: dddddddd-dddd-dddd-dddd-dddddddddddd
+      - key: REDIS_URL
+        value: ""
+      - key: MODEL_PROVIDER
+        value: gemini
+      - key: WHATSAPP_OUTBOUND_PROVIDER
+        value: meta
+      - key: QR_PROVIDER
+        value: baneco
+      - key: BANK_TX_PROVIDER
+        value: baneco
+      - key: ENABLE_LIVE_PAYMENTS
+        value: "true"
+      - key: LOG_LEVEL
+        value: INFO
+      # URL pública de esta API (webhooks Meta/Baneco) y del panel (CORS).
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false
+      # Supabase: admin para migraciones/seed; runtime = rol sin BYPASSRLS.
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_RUNTIME_URL
+        sync: false
+      - key: OWNER_DASHBOARD_TOKEN
+        generateValue: true
+      - key: OWNER_WA_NUMBERS
+        sync: false
+      - key: META_WHATSAPP_VERIFY_TOKEN
+        sync: false
+      - key: META_WHATSAPP_APP_SECRET
+        sync: false
+      - key: META_WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: META_WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: GEMINI_DEFAULT_MODEL_ID
+        sync: false
+      - key: MODEL_SECONDARY_PROVIDER
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_MODEL_ID
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL_ID
+        sync: false
+      - key: COHERE_API_KEY
+        sync: false
+      - key: BANECO_API_BASE_URL
+        sync: false
+      - key: BANECO_USERNAME
+        sync: false
+      - key: BANECO_PASSWORD
+        sync: false
+      - key: BANECO_AES_KEY
+        sync: false
+      - key: BANECO_ACCOUNT_CREDIT
+        sync: false
+      - key: BANECO_NOTIFY_SHARED_SECRET
+        sync: false
+
+  - type: web
+    name: agent-ia-web
+    runtime: docker
+    region: oregon
+    plan: free
+    dockerfilePath: ./apps/web/Dockerfile
+    dockerContext: ./apps/web
+    healthCheckPath: /login
+    envVars:
+      # URL pública de la API (https://agent-ia-api.onrender.com o la que asigne Render).
+      - key: API_INTERNAL_URL
+        sync: false
+      - key: OWNER_DASHBOARD_TOKEN
+        fromService:
+          type: web
+          name: agent-ia-api
+          envVarKey: OWNER_DASHBOARD_TOKEN
+      - key: OWNER_DASHBOARD_USERNAME
+        sync: false

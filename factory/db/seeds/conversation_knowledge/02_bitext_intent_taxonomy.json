@@ -1,0 +1,761 @@
+{
+  "dataset": "02_bitext_intent_taxonomy",
+  "source_summary": {
+    "source_file": "Bitext_Sample_Customer_Support_Training_Dataset_27K_responses-v11.csv",
+    "total_records_analyzed": 26872,
+    "total_intents": 27,
+    "total_categories": 11,
+    "note": "Los 26.872 registros originales (instruction/response de ejemplo) NO se almacenan. Se condensaron en esta taxonomía de intents reutilizable. Las respuestas ('response') del CSV son ejemplos de redacción conversacional, no conocimiento real del negocio, y no deben usarse como fuente de verdad."
+  },
+  "intents": [
+    {
+      "intent": "place_order",
+      "category": "ORDER",
+      "description": "El cliente quiere realizar un pedido de uno o más productos.",
+      "customer_signals": [
+        "quiero comprar",
+        "cómo hago un pedido",
+        "quiero ordenar X"
+      ],
+      "conversation_goal": "capturar qué producto(s), cantidad y confirmar datos necesarios para concretar la compra",
+      "recommended_behavior": [
+        "Confirmar el/los producto(s) exactos antes de avanzar",
+        "Pedir solo los datos estrictamente necesarios para procesar el pedido",
+        "Entregar confirmación clara del pedido generado"
+      ],
+      "possible_next_actions": [
+        "trigger_conversion_flow",
+        "collect_required_order_data",
+        "confirm_order_with_business_source"
+      ],
+      "relevance_for_adri": "high",
+      "record_count": 998,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "place_order",
+        "situation": "support_conversation",
+        "priority": "high",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "cancel_order",
+      "category": "ORDER",
+      "description": "El cliente quiere cancelar un pedido ya realizado.",
+      "customer_signals": [
+        "cancelar pedido",
+        "quiero anular mi orden",
+        "no quiero seguir con la compra {{numero de pedido}}"
+      ],
+      "conversation_goal": "identificar el pedido y gestionar la cancelación según política real de la empresa",
+      "recommended_behavior": [
+        "Pedir el número de pedido si no fue dado",
+        "Consultar la política de cancelación real antes de confirmar",
+        "Confirmar la cancelación o explicar por qué no procede"
+      ],
+      "possible_next_actions": [
+        "lookup_order_status",
+        "check_cancellation_policy",
+        "escalate_to_human_if_out_of_policy"
+      ],
+      "relevance_for_adri": "high",
+      "record_count": 998,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "cancel_order",
+        "situation": "support_conversation",
+        "priority": "high",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "change_order",
+      "category": "ORDER",
+      "description": "El cliente quiere modificar un pedido existente (agregar, quitar o cambiar ítems).",
+      "customer_signals": [
+        "quiero cambiar mi pedido",
+        "agregar un producto a la orden {{numero}}",
+        "modificar mi compra"
+      ],
+      "conversation_goal": "identificar el pedido y el cambio solicitado, y validar si es posible según el estado del pedido",
+      "recommended_behavior": [
+        "Confirmar el pedido exacto a modificar",
+        "Verificar si el estado del pedido permite el cambio",
+        "Confirmar el cambio aplicado o explicar la limitación"
+      ],
+      "possible_next_actions": [
+        "lookup_order_status",
+        "apply_order_change_if_allowed",
+        "escalate_to_human_if_out_of_policy"
+      ],
+      "relevance_for_adri": "medium",
+      "record_count": 997,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "change_order",
+        "situation": "support_conversation",
+        "priority": "medium",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "track_order",
+      "category": "ORDER",
+      "description": "El cliente quiere saber el estado o tiempo estimado de llegada de su pedido.",
+      "customer_signals": [
+        "dónde está mi pedido",
+        "eta de mi compra {{numero}}",
+        "cuándo llega mi orden"
+      ],
+      "conversation_goal": "entregar el estado real del pedido consultando la fuente empresarial",
+      "recommended_behavior": [
+        "Pedir número de pedido si falta",
+        "Responder con el estado real, nunca estimado sin fuente",
+        "Si no hay información disponible, decirlo y ofrecer escalar"
+      ],
+      "possible_next_actions": [
+        "lookup_order_status",
+        "escalate_to_human_if_no_data"
+      ],
+      "relevance_for_adri": "high",
+      "record_count": 995,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "track_order",
+        "situation": "support_conversation",
+        "priority": "high",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "get_refund",
+      "category": "REFUND",
+      "description": "El cliente solicita iniciar un reembolso.",
+      "customer_signals": [
+        "quiero que me devuelvan el dinero",
+        "solicitar reembolso de mi compra {{numero}}"
+      ],
+      "conversation_goal": "iniciar el proceso de reembolso según la política real vigente",
+      "recommended_behavior": [
+        "Verificar elegibilidad según política de reembolso real",
+        "Solicitar datos mínimos necesarios (pedido, motivo)",
+        "Confirmar el proceso iniciado o explicar por qué no aplica"
+      ],
+      "possible_next_actions": [
+        "check_refund_policy",
+        "initiate_refund_process",
+        "escalate_to_human"
+      ],
+      "relevance_for_adri": "medium",
+      "record_count": 997,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "get_refund",
+        "situation": "support_conversation",
+        "priority": "medium",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "track_refund",
+      "category": "REFUND",
+      "description": "El cliente quiere saber el estado de un reembolso ya solicitado.",
+      "customer_signals": [
+        "hay novedades de mi reembolso",
+        "estado de mi devolución de dinero"
+      ],
+      "conversation_goal": "entregar el estado real del reembolso consultando la fuente empresarial",
+      "recommended_behavior": [
+        "Pedir referencia del reembolso si falta",
+        "Responder con estado real; si no hay dato, ser transparente"
+      ],
+      "possible_next_actions": [
+        "lookup_refund_status",
+        "escalate_to_human_if_no_data"
+      ],
+      "relevance_for_adri": "medium",
+      "record_count": 998,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "track_refund",
+        "situation": "support_conversation",
+        "priority": "medium",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "check_refund_policy",
+      "category": "REFUND",
+      "description": "El cliente pregunta por la política de reembolsos/garantía de devolución de dinero.",
+      "customer_signals": [
+        "cuál es su política de reembolso",
+        "en qué casos puedo pedir devolución de dinero"
+      ],
+      "conversation_goal": "informar la política real vigente de la empresa",
+      "recommended_behavior": [
+        "Responder con la política real (FAQ del negocio), nunca inventada",
+        "Ser claro sobre condiciones y plazos"
+      ],
+      "possible_next_actions": [
+        "retrieve_faq_or_policy_from_business_rag"
+      ],
+      "relevance_for_adri": "high",
+      "record_count": 997,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "check_refund_policy",
+        "situation": "support_conversation",
+        "priority": "high",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "check_cancellation_fee",
+      "category": "CANCEL",
+      "description": "El cliente pregunta si existe un cargo por cancelar un pedido, suscripción o contrato.",
+      "customer_signals": [
+        "cuál es el cargo por cancelar",
+        "cobran algo por anular"
+      ],
+      "conversation_goal": "informar si aplica un cargo y su monto según política real",
+      "recommended_behavior": [
+        "Responder con datos reales de política de cancelación",
+        "No asumir que no hay cargo si no está verificado"
+      ],
+      "possible_next_actions": [
+        "retrieve_faq_or_policy_from_business_rag"
+      ],
+      "relevance_for_adri": "medium",
+      "record_count": 950,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "check_cancellation_fee",
+        "situation": "support_conversation",
+        "priority": "medium",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "get_invoice",
+      "category": "INVOICE",
+      "description": "El cliente quiere descargar u obtener una factura/boleta.",
+      "customer_signals": [
+        "quiero mi factura",
+        "descargar boleta del pedido {{numero}}"
+      ],
+      "conversation_goal": "entregar o guiar la obtención del comprobante correspondiente",
+      "recommended_behavior": [
+        "Identificar el pedido o periodo correspondiente",
+        "Entregar el documento real o el paso concreto para obtenerlo"
+      ],
+      "possible_next_actions": [
+        "retrieve_invoice_from_business_source",
+        "escalate_to_human"
+      ],
+      "relevance_for_adri": "low",
+      "record_count": 999,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "get_invoice",
+        "situation": "support_conversation",
+        "priority": "low",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "check_invoice",
+      "category": "INVOICE",
+      "description": "El cliente quiere revisar el detalle de una factura ya emitida.",
+      "customer_signals": [
+        "mostrar factura {{numero}}",
+        "ver mis facturas"
+      ],
+      "conversation_goal": "mostrar el detalle real de la factura solicitada",
+      "recommended_behavior": [
+        "Verificar identidad/pedido antes de mostrar datos sensibles",
+        "Mostrar solo datos reales del documento"
+      ],
+      "possible_next_actions": [
+        "retrieve_invoice_from_business_source"
+      ],
+      "relevance_for_adri": "low",
+      "record_count": 1000,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "check_invoice",
+        "situation": "support_conversation",
+        "priority": "low",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "contact_customer_service",
+      "category": "CONTACT",
+      "description": "El cliente pregunta cómo contactar al servicio al cliente (canales, horarios).",
+      "customer_signals": [
+        "cómo contacto a soporte",
+        "tienen número de atención",
+        "horario de atención"
+      ],
+      "conversation_goal": "informar canales y horarios reales de contacto",
+      "recommended_behavior": [
+        "Responder con datos reales de contacto del negocio, sin inventar canales que no existen"
+      ],
+      "possible_next_actions": [
+        "retrieve_faq_or_policy_from_business_rag"
+      ],
+      "relevance_for_adri": "medium",
+      "record_count": 1000,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "contact_customer_service",
+        "situation": "support_conversation",
+        "priority": "medium",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "contact_human_agent",
+      "category": "CONTACT",
+      "description": "El cliente pide explícitamente hablar con una persona en vez del agente digital.",
+      "customer_signals": [
+        "quiero hablar con una persona",
+        "pásame con un humano",
+        "no entiendo, ayuda real"
+      ],
+      "conversation_goal": "escalar la conversación a un humano de forma fluida",
+      "recommended_behavior": [
+        "No insistir en resolverlo solo si el cliente pidió explícitamente un humano",
+        "Confirmar el escalamiento y dar contexto claro de la derivación"
+      ],
+      "possible_next_actions": [
+        "escalate_to_human_agent"
+      ],
+      "relevance_for_adri": "high",
+      "record_count": 999,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "contact_human_agent",
+        "situation": "support_conversation",
+        "priority": "high",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "check_payment_methods",
+      "category": "PAYMENT",
+      "description": "El cliente pregunta qué medios de pago se aceptan.",
+      "customer_signals": [
+        "qué métodos de pago aceptan",
+        "puedo pagar con transferencia"
+      ],
+      "conversation_goal": "informar los métodos de pago reales disponibles",
+      "recommended_behavior": [
+        "Responder con los medios de pago reales configurados por el negocio"
+      ],
+      "possible_next_actions": [
+        "retrieve_faq_or_policy_from_business_rag"
+      ],
+      "relevance_for_adri": "high",
+      "record_count": 999,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "check_payment_methods",
+        "situation": "support_conversation",
+        "priority": "high",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "payment_issue",
+      "category": "PAYMENT",
+      "description": "El cliente reporta un error o problema al intentar pagar.",
+      "customer_signals": [
+        "no puedo pagar",
+        "error al procesar el pago",
+        "mi tarjeta fue rechazada"
+      ],
+      "conversation_goal": "diagnosticar el problema y ofrecer una vía de solución o escalamiento",
+      "recommended_behavior": [
+        "Pedir detalle del error si no fue dado",
+        "Ofrecer alternativa de pago si existe",
+        "Escalar si el problema no se resuelve con información disponible"
+      ],
+      "possible_next_actions": [
+        "offer_alternative_payment_method",
+        "escalate_to_human"
+      ],
+      "relevance_for_adri": "high",
+      "record_count": 999,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "payment_issue",
+        "situation": "support_conversation",
+        "priority": "high",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "complaint",
+      "category": "FEEDBACK",
+      "description": "El cliente quiere presentar un reclamo formal.",
+      "customer_signals": [
+        "quiero hacer un reclamo",
+        "necesito presentar una queja formal"
+      ],
+      "conversation_goal": "recoger el reclamo con la información necesaria y encaminarlo correctamente",
+      "recommended_behavior": [
+        "Escuchar sin minimizar el reclamo",
+        "Recoger los datos clave (pedido, motivo)",
+        "Confirmar el canal/proceso real de reclamos o escalar a humano"
+      ],
+      "possible_next_actions": [
+        "log_complaint",
+        "escalate_to_human"
+      ],
+      "relevance_for_adri": "medium",
+      "record_count": 1000,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "complaint",
+        "situation": "support_conversation",
+        "priority": "medium",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "review",
+      "category": "FEEDBACK",
+      "description": "El cliente quiere dejar una opinión o reseña sobre el producto/servicio.",
+      "customer_signals": [
+        "quiero dejar una reseña",
+        "cómo doy mi opinión del producto"
+      ],
+      "conversation_goal": "guiar al cliente al canal real donde puede dejar su reseña",
+      "recommended_behavior": [
+        "Indicar el canal real disponible (si existe) para reseñas"
+      ],
+      "possible_next_actions": [
+        "retrieve_faq_or_policy_from_business_rag"
+      ],
+      "relevance_for_adri": "low",
+      "record_count": 997,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "review",
+        "situation": "support_conversation",
+        "priority": "low",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "delivery_period",
+      "category": "DELIVERY",
+      "description": "El cliente pregunta cuánto demora en llegar su pedido.",
+      "customer_signals": [
+        "cuánto demora en llegar",
+        "en cuánto tiempo llega mi pedido"
+      ],
+      "conversation_goal": "informar el tiempo de entrega real (general o del pedido puntual)",
+      "recommended_behavior": [
+        "Responder con plazos reales configurados por el negocio o el estado real del pedido"
+      ],
+      "possible_next_actions": [
+        "retrieve_faq_or_policy_from_business_rag",
+        "lookup_order_status"
+      ],
+      "relevance_for_adri": "high",
+      "record_count": 999,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "delivery_period",
+        "situation": "support_conversation",
+        "priority": "high",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "delivery_options",
+      "category": "DELIVERY",
+      "description": "El cliente pregunta qué métodos/zonas de entrega existen.",
+      "customer_signals": [
+        "qué métodos de envío tienen",
+        "hacen envíos a mi ciudad"
+      ],
+      "conversation_goal": "informar las opciones de entrega reales disponibles",
+      "recommended_behavior": [
+        "Responder con opciones reales de envío del negocio, incluida cobertura geográfica"
+      ],
+      "possible_next_actions": [
+        "retrieve_faq_or_policy_from_business_rag"
+      ],
+      "relevance_for_adri": "high",
+      "record_count": 995,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "delivery_options",
+        "situation": "support_conversation",
+        "priority": "high",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "set_up_shipping_address",
+      "category": "SHIPPING",
+      "description": "El cliente necesita ayuda para configurar una dirección de envío.",
+      "customer_signals": [
+        "cómo agrego una dirección de envío",
+        "tengo un error al ingresar mi dirección"
+      ],
+      "conversation_goal": "guiar la configuración correcta de la dirección de envío",
+      "recommended_behavior": [
+        "Guiar paso a paso o capturar la dirección directamente si el flujo lo permite"
+      ],
+      "possible_next_actions": [
+        "collect_shipping_address",
+        "escalate_to_human_if_technical_error"
+      ],
+      "relevance_for_adri": "medium",
+      "record_count": 997,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "set_up_shipping_address",
+        "situation": "support_conversation",
+        "priority": "medium",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "change_shipping_address",
+      "category": "SHIPPING",
+      "description": "El cliente quiere modificar una dirección de envío ya registrada.",
+      "customer_signals": [
+        "quiero cambiar mi dirección",
+        "puse mal la dirección, corregirla"
+      ],
+      "conversation_goal": "actualizar la dirección de envío validando el pedido asociado",
+      "recommended_behavior": [
+        "Verificar si el pedido aún permite el cambio antes de confirmarlo"
+      ],
+      "possible_next_actions": [
+        "lookup_order_status",
+        "update_shipping_address"
+      ],
+      "relevance_for_adri": "medium",
+      "record_count": 973,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "change_shipping_address",
+        "situation": "support_conversation",
+        "priority": "medium",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "newsletter_subscription",
+      "category": "SUBSCRIPTION",
+      "description": "El cliente quiere suscribirse o desuscribirse de comunicaciones/newsletter.",
+      "customer_signals": [
+        "quiero darme de baja del newsletter",
+        "cómo me suscribo a novedades"
+      ],
+      "conversation_goal": "gestionar la suscripción según lo pedido",
+      "recommended_behavior": [
+        "Confirmar la acción (suscribir/desuscribir) realizada"
+      ],
+      "possible_next_actions": [
+        "update_subscription_preference"
+      ],
+      "relevance_for_adri": "low",
+      "record_count": 999,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "newsletter_subscription",
+        "situation": "support_conversation",
+        "priority": "low",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "create_account",
+      "category": "ACCOUNT",
+      "description": "El cliente quiere crear una cuenta.",
+      "customer_signals": [
+        "cómo abro una cuenta",
+        "quiero registrarme"
+      ],
+      "conversation_goal": "guiar la creación de cuenta o capturar los datos necesarios",
+      "recommended_behavior": [
+        "Guiar el paso concreto o iniciar el flujo de registro disponible"
+      ],
+      "possible_next_actions": [
+        "trigger_account_creation_flow"
+      ],
+      "relevance_for_adri": "medium",
+      "record_count": 997,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "create_account",
+        "situation": "support_conversation",
+        "priority": "medium",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "delete_account",
+      "category": "ACCOUNT",
+      "description": "El cliente quiere eliminar su cuenta.",
+      "customer_signals": [
+        "quiero eliminar mi cuenta",
+        "cómo doy de baja mi perfil"
+      ],
+      "conversation_goal": "gestionar la eliminación de cuenta según proceso real, confirmando la intención",
+      "recommended_behavior": [
+        "Confirmar la intención antes de ejecutar (acción irreversible)",
+        "Explicar consecuencias reales si aplica"
+      ],
+      "possible_next_actions": [
+        "confirm_and_trigger_account_deletion",
+        "escalate_to_human"
+      ],
+      "relevance_for_adri": "low",
+      "record_count": 995,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "delete_account",
+        "situation": "support_conversation",
+        "priority": "low",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "edit_account",
+      "category": "ACCOUNT",
+      "description": "El cliente quiere corregir o actualizar datos de su cuenta.",
+      "customer_signals": [
+        "corregir mis datos",
+        "actualizar mi información personal"
+      ],
+      "conversation_goal": "actualizar el dato solicitado de forma segura",
+      "recommended_behavior": [
+        "Confirmar qué dato exacto se debe cambiar antes de aplicar"
+      ],
+      "possible_next_actions": [
+        "update_account_field"
+      ],
+      "relevance_for_adri": "low",
+      "record_count": 1000,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "edit_account",
+        "situation": "support_conversation",
+        "priority": "low",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "switch_account",
+      "category": "ACCOUNT",
+      "description": "El cliente quiere cambiar entre distintos tipos/perfiles de cuenta.",
+      "customer_signals": [
+        "cómo cambio de cuenta",
+        "quiero pasar a otro tipo de cuenta"
+      ],
+      "conversation_goal": "guiar el cambio de perfil de cuenta",
+      "recommended_behavior": [
+        "Guiar el paso concreto según opciones reales disponibles"
+      ],
+      "possible_next_actions": [
+        "trigger_account_switch_flow"
+      ],
+      "relevance_for_adri": "low",
+      "record_count": 1000,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "switch_account",
+        "situation": "support_conversation",
+        "priority": "low",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "recover_password",
+      "category": "ACCOUNT",
+      "description": "El cliente no puede acceder a su cuenta y necesita recuperar contraseña/PIN.",
+      "customer_signals": [
+        "olvidé mi contraseña",
+        "no puedo entrar a mi cuenta"
+      ],
+      "conversation_goal": "guiar el proceso real de recuperación de acceso",
+      "recommended_behavior": [
+        "Guiar el flujo de recuperación real, sin pedir la contraseña directamente"
+      ],
+      "possible_next_actions": [
+        "trigger_password_recovery_flow"
+      ],
+      "relevance_for_adri": "medium",
+      "record_count": 995,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "recover_password",
+        "situation": "support_conversation",
+        "priority": "medium",
+        "version": "1.0"
+      }
+    },
+    {
+      "intent": "registration_problems",
+      "category": "ACCOUNT",
+      "description": "El cliente tuvo un problema durante el registro/creación de cuenta.",
+      "customer_signals": [
+        "tengo un error al registrarme",
+        "no puedo completar mi registro"
+      ],
+      "conversation_goal": "diagnosticar el error y resolver o escalar",
+      "recommended_behavior": [
+        "Pedir el detalle del error",
+        "Escalar si es un problema técnico fuera del alcance conversacional"
+      ],
+      "possible_next_actions": [
+        "troubleshoot_registration",
+        "escalate_to_human"
+      ],
+      "relevance_for_adri": "low",
+      "record_count": 1000,
+      "metadata": {
+        "source": "bitext",
+        "domain": "intent_taxonomy",
+        "intent": "registration_problems",
+        "situation": "support_conversation",
+        "priority": "low",
+        "version": "1.0"
+      }
+    }
+  ]
+}

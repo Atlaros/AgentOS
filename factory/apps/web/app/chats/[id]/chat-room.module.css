@@ -1,0 +1,319 @@
+.room {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+}
+
+.head h1 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.sub {
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.switch,
+.switchPaused {
+  flex: none;
+  min-height: 2.5rem;
+}
+
+.switchPaused {
+  background: transparent;
+  border-color: var(--warn);
+  color: var(--warn);
+}
+
+.switchPaused:hover {
+  background: rgba(245, 158, 11, 0.14);
+  filter: none;
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  background: rgba(245, 158, 11, 0.14);
+  color: var(--warn);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.banner button {
+  flex: none;
+  min-height: 2.5rem;
+}
+
+.closeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.closeRow button {
+  min-height: 2.5rem;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 17.5rem;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.thread {
+  margin: 0;
+  min-height: 16rem;
+  max-height: min(36rem, calc(100dvh - 18rem));
+}
+
+.context {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.ticket {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 0.75rem 0.85rem;
+}
+
+.ticketHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.kicker {
+  margin: 0 0 0.55rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ticketHead .kicker {
+  margin: 0;
+}
+
+.facts {
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.facts div {
+  display: grid;
+  gap: 0.05rem;
+}
+
+.facts dt {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.facts dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.money {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.lines .money,
+.discount .money {
+  color: var(--muted);
+}
+
+.discount {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0.55rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0.55rem 0 0;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--line);
+  font-weight: 650;
+}
+
+.empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.fileFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 0.55rem;
+}
+
+.fileFilters button {
+  min-height: 2rem;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.75rem;
+}
+
+.filterActive {
+  border-color: var(--accent, #2563eb);
+}
+
+.fileList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.fileRow {
+  min-width: 0;
+}
+
+.mediaThumbBtn {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.mediaThumb {
+  display: block;
+  max-width: 100%;
+  max-height: 10rem;
+  border-radius: 0.4rem;
+  object-fit: cover;
+}
+
+.mediaPlayer {
+  display: block;
+  width: 100%;
+  max-width: 18rem;
+  margin: 0.25rem 0;
+}
+
+.mediaDoc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  align-items: baseline;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.mediaMeta {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+.mediaError {
+  margin: 0.15rem 0;
+  color: var(--warn, #b45309);
+  font-size: 0.85rem;
+}
+
+.mediaPending {
+  margin: 0.15rem 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.enrichText {
+  margin: 0.35rem 0 0;
+  padding: 0.45rem 0.55rem;
+  border-left: 2px solid var(--border, #d4d4d8);
+  color: var(--fg, #18181b);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+.enrichLabel {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.enrichBtn {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 800px) {
+  .head {
+    flex-direction: column;
+  }
+
+  .switch,
+  .switchPaused {
+    width: 100%;
+  }
+
+  .stage {
+    grid-template-columns: 1fr;
+  }
+
+  .context {
+    order: -1;
+  }
+
+  .thread {
+    min-height: 12rem;
+    max-height: min(24rem, calc(100dvh - 22rem));
+  }
+
+  .banner {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

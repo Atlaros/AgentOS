@@ -1,0 +1,82 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      # Docker network overrides; Meta/WhatsApp/LLM come from .env
+      APP_ENV: local
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/factory_agent_os_v2
+      DATABASE_RUNTIME_URL: ${DATABASE_RUNTIME_URL_DOCKER:-postgresql://app_runtime:app_runtime@db:5432/factory_agent_os_v2}
+      CATALOG_SEED: cafe
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: factory-os-worker
+    environment:
+      APP_ENV: local
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  db:
+    image: pgvector/pgvector:pg16
+    ports:
+      # Host 5432 is often taken (other local stacks). Pilot API uses 127.0.0.1:5434.
+      - "127.0.0.1:5434:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: factory_agent_os_v2
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Do not mount migrations into initdb.d: those files are not ordered the
+      # same way as apply_migrations() and leave a half-applied schema. The
+      # API/runtime applies db/migrations via factory_os.domain.postgres.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d factory_agent_os_v2"]
+      interval: 5s
+      timeout: 3s
+      retries: 8
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 8
+
+  web:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./apps/web:/app
+    ports:
+      - "3000:3000"
+    environment:
+      # Browser → host API; SSR inside the web container → Docker service name
+      API_INTERNAL_URL: http://api:8000
+      OWNER_DASHBOARD_USERNAME: ${OWNER_DASHBOARD_USERNAME:-}
+      OWNER_DASHBOARD_TOKEN: ${OWNER_DASHBOARD_TOKEN:-}
+    command: sh -c "npm install && npm run dev -- -H 0.0.0.0"
+    profiles:
+      - web
+
+volumes:
+  pgdata:

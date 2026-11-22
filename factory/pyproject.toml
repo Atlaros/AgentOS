@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "factory-agent-os-v2"
+version = "0.1.0"
+description = "Factory Agent OS — digital employees for a small business"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "pydantic>=2.7",
+  "pydantic-settings>=2.4",
+  "psycopg[binary]>=3.2",
+  "httpx>=0.27",
+  "langgraph>=0.2",
+  "redis>=5.0",
+  "openpyxl>=3.1",
+  "pillow>=10.4",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.2",
+  "httpx>=0.27",
+]
+
+[project.scripts]
+factory-os-api = "factory_os.api.main:run"
+factory-os-worker = "factory_os.worker.main:run"
+
+[tool.setuptools]
+packages = [
+  "factory_os",
+  "factory_os.domain",
+  "factory_os.harness",
+  "factory_os.tools",
+  "factory_os.agents",
+  "factory_os.contracts",
+  "factory_os.api",
+  "factory_os.worker",
+]
+
+[tool.setuptools.package-dir]
+"factory_os" = "packages/namespace/factory_os"
+"factory_os.domain" = "packages/domain/factory_os/domain"
+"factory_os.harness" = "packages/harness/factory_os/harness"
+"factory_os.tools" = "packages/tools/factory_os/tools"
+"factory_os.agents" = "packages/agents/factory_os/agents"
+"factory_os.contracts" = "packages/contracts/factory_os/contracts"
+"factory_os.api" = "apps/api/factory_os/api"
+"factory_os.worker" = "workers/factory_os/worker"
+
+[tool.setuptools.package-data]
+"factory_os.api" = ["static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "evals"]
+pythonpath = [
+  ".",
+  "packages/namespace",
+  "packages/domain",
+  "packages/harness",
+  "packages/tools",
+  "packages/agents",
+  "packages/contracts",
+  "apps/api",
+  "workers",
+]

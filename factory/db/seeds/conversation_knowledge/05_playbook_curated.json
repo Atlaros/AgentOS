@@ -1,0 +1,1762 @@
+{
+  "dataset": "05_playbook_curated",
+  "version": "1.0.0",
+  "status": "indexed",
+  "authority": {
+    "seller": "LLM SalesDecision (ADR-003)",
+    "facts": "catalog.search + shop_knowledge",
+    "playbook_role": "optional READ hints for the seller; never a parallel script",
+    "index": "conversation_playbook (pgvector) + in-process PlaybookIndex; max 2 hits/turn; examples never facts"
+  },
+  "dedupe": {
+    "base": "03_adri_business_patterns (46)",
+    "overlap_intents_superseded_from_01": [
+      "customer_hesitation",
+      "need_change",
+      "previous_product_reference",
+      "product_comparison",
+      "purchase_intent",
+      "recommendation_rejection",
+      "similar_item_request"
+    ],
+    "added_from_01_unique": [
+      "product_discovery",
+      "positive_feedback",
+      "negative_feedback",
+      "conversation_closure",
+      "conversation_continuity"
+    ],
+    "dropped_from_01": [
+      "attribute_search",
+      "brand_search",
+      "feature_question",
+      "off_topic_question",
+      "preference_refinement",
+      "recommendation"
+    ],
+    "drop_reason": "Covered by Adri intents or low Closet fit (brand/attribute/recommendation/feature/off_topic)."
+  },
+  "tool_vocabulary": {
+    "adri": [
+      "catalog.search",
+      "cart.add",
+      "order.create"
+    ],
+    "not_adri": [
+      "payment.create_qr",
+      "payment.status",
+      "delivery.create"
+    ]
+  },
+  "skill_vocabulary": [
+    "customer_assistance",
+    "sales_discovery",
+    "product_recommendation",
+    "objection_handling",
+    "sales_closing"
+  ],
+  "next_action_vocabulary": [
+    "answer",
+    "ask_discovery_question",
+    "search_catalog",
+    "recommend",
+    "compare",
+    "handle_objection",
+    "request_confirmation",
+    "create_order",
+    "handoff",
+    "escalate"
+  ],
+  "counts": {
+    "patterns": 51,
+    "from_adri": 46,
+    "from_convrec_extra": 5,
+    "superseding_overlap": 7
+  },
+  "patterns": [
+    {
+      "pattern_id": "pb_001",
+      "intent": "greeting",
+      "situation": "greeting",
+      "goal": "recibir al cliente y abrir la conversación de forma natural",
+      "signals": [
+        "Primer mensaje de la conversación (hola, buenas, disponibilidad general)"
+      ],
+      "behavior": [
+        "Saludar brevemente sin guion robótico repetido",
+        "Invitar a que el cliente cuente qué necesita"
+      ],
+      "avoid": [
+        "Responder con menú rígido de opciones numeradas si no es necesario",
+        "Pedir demasiados datos antes de entender qué busca"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [],
+      "capability": "adri",
+      "priority": "low",
+      "derived_from": [
+        "adri_001"
+      ],
+      "supersedes": [],
+      "example_customer_message": "Hola, buenas tardes",
+      "example_is_not_fact": true,
+      "closet_notes": "Solo saluda si es el primer turno; no re-saludar a mitad del chat (F2)."
+    },
+    {
+      "pattern_id": "pb_002",
+      "intent": "product_search",
+      "situation": "product_search",
+      "goal": "identificar qué producto busca el cliente",
+      "signals": [
+        "Cliente menciona un producto o categoría directamente"
+      ],
+      "behavior": [
+        "Confirmar el producto entendido",
+        "Consultar catálogo real antes de responder"
+      ],
+      "avoid": [
+        "Responder sin verificar existencia real en catálogo"
+      ],
+      "next_action": "search_catalog",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_002"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿Tienen la campera azul talla M?",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_003",
+      "intent": "need_description",
+      "situation": "need_description",
+      "goal": "traducir una necesidad funcional en criterios de búsqueda",
+      "signals": [
+        "Cliente describe un uso o problema en vez de un producto ('algo para el frío', 'para hacer ejercicio')"
+      ],
+      "behavior": [
+        "Extraer la necesidad funcional clave (uso, ocasión, urgencia)",
+        "Traducirla en filtros de catálogo (categoría, atributo)"
+      ],
+      "avoid": [
+        "Pedir que reformule como si fuera nombre de producto exacto"
+      ],
+      "next_action": "ask_discovery_question",
+      "skill": "sales_discovery",
+      "allowed_tools": [],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_003"
+      ],
+      "supersedes": [],
+      "example_customer_message": "necesito algo para el frío pero que no sea muy abrigado",
+      "example_is_not_fact": true,
+      "closet_notes": "Traducir necesidad a filtros; una pregunta si falta un dato clave."
+    },
+    {
+      "pattern_id": "pb_004",
+      "intent": "ambiguous_language",
+      "situation": "ambiguous_language",
+      "goal": "resolver ambigüedad sin frenar la conversación",
+      "signals": [
+        "Mensaje corto o vago ('algo lindo', 'lo de siempre', 'no sé, sorpréndeme')"
+      ],
+      "behavior": [
+        "Hacer como máximo una pregunta de acotación específica",
+        "Si hay suficiente contexto previo, proponer una opción concreta en vez de solo preguntar"
+      ],
+      "avoid": [
+        "Hacer una batería de preguntas antes de mostrar algo",
+        "Asumir una interpretación arriesgada sin señal suficiente"
+      ],
+      "next_action": "ask_discovery_question",
+      "skill": "sales_discovery",
+      "allowed_tools": [],
+      "knowledge_sources": [],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_004"
+      ],
+      "supersedes": [],
+      "example_customer_message": "quiero algo lindo para regalar",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_005",
+      "intent": "similar_item_request",
+      "situation": "similar_item_request",
+      "goal": "resolver pedido de similitud usando un ítem ancla",
+      "signals": [
+        "'algo parecido a...' con referencia a un producto, marca o descripción",
+        "Cliente pide 'algo parecido', 'similar pero...', usando un producto o marca como ancla"
+      ],
+      "behavior": [
+        "Identificar qué atributo mantener y cuál puede variar",
+        "Buscar en catálogo por similitud de atributos, no solo de nombre",
+        "Identificar qué atributo del producto ancla se debe conservar (estilo, uso, precio) y cuál cambiar",
+        "Buscar en catálogo real productos que compartan esos atributos clave"
+      ],
+      "avoid": [
+        "Recomendar productos sin relación real con la referencia dada",
+        "Recomendar productos sin relación real con el ítem de referencia",
+        "Ignorar cuál es el atributo que el cliente quiere cambiar respecto al ancla"
+      ],
+      "next_action": "search_catalog",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog",
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_005"
+      ],
+      "supersedes": [
+        "convrec_016"
+      ],
+      "example_customer_message": "algo parecido a esa mochila pero más chica",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_006",
+      "intent": "style_request",
+      "situation": "style_request",
+      "goal": "filtrar catálogo por estilo declarado",
+      "signals": [
+        "Cliente pide por estilo ('casual', 'formal', 'deportivo')"
+      ],
+      "behavior": [
+        "Aplicar el estilo como filtro sobre catálogo real",
+        "Confirmar el estilo aplicado en la respuesta"
+      ],
+      "avoid": [
+        "Inferir un estilo no declarado por el cliente"
+      ],
+      "next_action": "search_catalog",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_006"
+      ],
+      "supersedes": [],
+      "example_customer_message": "busco algo más formal para la oficina",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_007",
+      "intent": "use_case_request",
+      "situation": "use_case_request",
+      "goal": "filtrar catálogo por caso de uso declarado",
+      "signals": [
+        "Cliente indica para qué lo va a usar ('para correr', 'para trabajar', 'para viajar')"
+      ],
+      "behavior": [
+        "Traducir el uso en atributos funcionales relevantes de catálogo"
+      ],
+      "avoid": [
+        "Ignorar el uso declarado y mostrar catálogo general"
+      ],
+      "next_action": "search_catalog",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_007"
+      ],
+      "supersedes": [],
+      "example_customer_message": "es para correr los fines de semana",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_008",
+      "intent": "color_request",
+      "situation": "color_request",
+      "goal": "filtrar catálogo por color",
+      "signals": [
+        "Cliente pide un color específico"
+      ],
+      "behavior": [
+        "Aplicar filtro de color sobre el contexto de búsqueda actual",
+        "Confirmar disponibilidad real de ese color"
+      ],
+      "avoid": [
+        "Afirmar disponibilidad de un color sin verificar stock real"
+      ],
+      "next_action": "search_catalog",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_008"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿lo tienen en negro?",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_009",
+      "intent": "size_request",
+      "situation": "size_request",
+      "goal": "filtrar catálogo por talla y verificar stock real",
+      "signals": [
+        "Cliente pide una talla específica"
+      ],
+      "behavior": [
+        "Verificar stock real de esa talla antes de confirmar",
+        "Si no hay stock, ofrecer alternativa real (otra talla, aviso de reposición)"
+      ],
+      "avoid": [
+        "Confirmar talla disponible sin haber consultado stock real"
+      ],
+      "next_action": "search_catalog",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_009"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿tienen talla 42?",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_010",
+      "intent": "category_request",
+      "situation": "category_request",
+      "goal": "filtrar catálogo por categoría de producto",
+      "signals": [
+        "Cliente pide una categoría general ('zapatillas', 'camperas', 'mochilas')"
+      ],
+      "behavior": [
+        "Mostrar un subconjunto acotado y relevante de la categoría, no el catálogo completo"
+      ],
+      "avoid": [
+        "Mostrar demasiados productos sin ningún filtro adicional"
+      ],
+      "next_action": "search_catalog",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_010"
+      ],
+      "supersedes": [],
+      "example_customer_message": "quiero ver mochilas",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_011",
+      "intent": "multi_attribute_request",
+      "situation": "multi_attribute_request",
+      "goal": "resolver búsqueda con varios filtros combinados",
+      "signals": [
+        "Cliente combina varios criterios en un mismo mensaje (color + talla + uso + precio)"
+      ],
+      "behavior": [
+        "Aplicar todos los filtros declarados simultáneamente",
+        "Si no hay resultados con todos los filtros, informar cuál relajar en vez de ignorar uno silenciosamente"
+      ],
+      "avoid": [
+        "Descartar silenciosamente un filtro porque no hay resultados exactos"
+      ],
+      "next_action": "search_catalog",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_011"
+      ],
+      "supersedes": [],
+      "example_customer_message": "busco zapatillas negras talla 40 para correr, menos de 80 dólares",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_012",
+      "intent": "specific_product_found",
+      "situation": "specific_product_found",
+      "goal": "confirmar y presentar un producto específico solicitado",
+      "signals": [
+        "Cliente pide un producto puntual que existe en catálogo"
+      ],
+      "behavior": [
+        "Confirmar datos verificables (precio, stock, variantes) desde el catálogo real"
+      ],
+      "avoid": [
+        "Inventar datos del producto no presentes en la ficha"
+      ],
+      "next_action": "recommend",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_012"
+      ],
+      "supersedes": [],
+      "example_customer_message": "quiero la campera North Face negra talla M",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_013",
+      "intent": "product_not_found",
+      "situation": "product_not_found",
+      "goal": "comunicar con transparencia que el producto no existe y ofrecer alternativa real",
+      "signals": [
+        "El producto pedido no existe en catálogo tras consulta real"
+      ],
+      "behavior": [
+        "Decir claramente que no está disponible",
+        "Ofrecer una alternativa real del catálogo si existe una razonable"
+      ],
+      "avoid": [
+        "Inventar que existe el producto",
+        "Ofrecer una alternativa sin verificarla en catálogo"
+      ],
+      "next_action": "search_catalog",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_013"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿tienen las Jordan 4 retro?",
+      "example_is_not_fact": true,
+      "closet_notes": "No inventar; ofrecer alternativas reales o escalar."
+    },
+    {
+      "pattern_id": "pb_014",
+      "intent": "semantic_search",
+      "situation": "semantic_search",
+      "goal": "resolver una búsqueda descrita en lenguaje natural sin nombre exacto de producto",
+      "signals": [
+        "Cliente describe el producto sin usar el nombre exacto del catálogo"
+      ],
+      "behavior": [
+        "Mapear la descripción a atributos de catálogo (no solo coincidencia de texto exacto)"
+      ],
+      "avoid": [
+        "Responder 'no tenemos eso' sin intentar una búsqueda semántica real"
+      ],
+      "next_action": "search_catalog",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_014"
+      ],
+      "supersedes": [],
+      "example_customer_message": "algo tipo zapatilla urbana blanca bien simple",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_015",
+      "intent": "similar_product_from_catalog",
+      "situation": "similar_product_from_catalog",
+      "goal": "sugerir un producto similar desde catálogo real ante falta de coincidencia exacta",
+      "signals": [
+        "No hay coincidencia exacta pero sí productos con atributos compartidos"
+      ],
+      "behavior": [
+        "Explicar brevemente en qué se parece y en qué difiere del pedido original"
+      ],
+      "avoid": [
+        "Presentar el producto similar como si fuera exactamente lo pedido"
+      ],
+      "next_action": "recommend",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog",
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_015"
+      ],
+      "supersedes": [],
+      "example_customer_message": "no hay stock del modelo exacto que pedí",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_016",
+      "intent": "alternatives_offer",
+      "situation": "alternatives_offer",
+      "goal": "ofrecer alternativas reales cuando la opción original no es viable",
+      "signals": [
+        "Producto sin stock, descontinuado o fuera de presupuesto declarado"
+      ],
+      "behavior": [
+        "Ofrecer 1-3 alternativas reales con una razón breve de por qué encajan"
+      ],
+      "avoid": [
+        "Ofrecer alternativas no verificadas en catálogo"
+      ],
+      "next_action": "recommend",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_016"
+      ],
+      "supersedes": [],
+      "example_customer_message": "esa remera ya no está en talla S, ¿qué otra opción hay?",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_017",
+      "intent": "product_comparison",
+      "situation": "product_comparison",
+      "goal": "comparar productos usando solo datos verificables de catálogo",
+      "signals": [
+        "Cliente pide comparar dos o más productos",
+        "Cliente pide comparar productos explícitamente o pregunta '¿cuál es mejor?', '¿en qué se diferencian?'"
+      ],
+      "behavior": [
+        "Comparar atributos objetivos (precio, material, uso) de forma breve y estructurada",
+        "Comparar solo con datos verificables de ficha/catálogo (precio, material, uso, disponibilidad)",
+        "Estructurar la comparación de forma breve y escaneable",
+        "Terminar con una pregunta que ayude a decidir, no con una opinión personal del agente"
+      ],
+      "avoid": [
+        "Inclinar la comparación hacia el producto más caro sin pedido explícito del cliente",
+        "Inclinar la comparación hacia el producto más caro sin que el cliente lo haya pedido",
+        "Comparar con atributos inventados no presentes en la ficha"
+      ],
+      "next_action": "compare",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog",
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_017"
+      ],
+      "supersedes": [
+        "convrec_011"
+      ],
+      "example_customer_message": "¿cuál es mejor, la A o la B?",
+      "example_is_not_fact": true,
+      "closet_notes": "Comparar solo con hechos de precio/stock del catálogo; ≤3 opciones."
+    },
+    {
+      "pattern_id": "pb_018",
+      "intent": "multiple_products_shown",
+      "situation": "multiple_products_shown",
+      "goal": "presentar varios productos de forma clara y acotada",
+      "signals": [
+        "El agente tiene varios candidatos relevantes que mostrar"
+      ],
+      "behavior": [
+        "Mostrar un número acotado (2-4)",
+        "Diferenciar brevemente cada opción para facilitar la decisión"
+      ],
+      "avoid": [
+        "Mostrar más de 4-5 productos en un mismo mensaje",
+        "Listar productos sin diferenciación entre ellos"
+      ],
+      "next_action": "recommend",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_018"
+      ],
+      "supersedes": [],
+      "example_customer_message": "mostrame todas las opciones que tengan",
+      "example_is_not_fact": true,
+      "closet_notes": "Máximo 3; destacar una con motivo; pregunta de cierre (F5)."
+    },
+    {
+      "pattern_id": "pb_019",
+      "intent": "previous_product_reference",
+      "situation": "previous_product_reference",
+      "goal": "resolver una referencia a un producto ya mostrado en la conversación",
+      "signals": [
+        "Cliente hace referencia implícita a un producto mostrado antes ('el segundo', 'ese negro')",
+        "Cliente usa referencias implícitas ('el segundo', 'ese que mostraste antes', 'el negro')",
+        "No repite el nombre completo del producto"
+      ],
+      "behavior": [
+        "Resolver contra el historial de productos mostrados en la conversación actual",
+        "Resolver la referencia contra el historial de productos mostrados en la conversación",
+        "Confirmar a qué producto se refiere si hay ambigüedad real"
+      ],
+      "avoid": [
+        "Perder la referencia y pedir que repita todo el pedido",
+        "Asumir un producto incorrecto sin verificar cuando hay ambigüedad",
+        "Pedir que repita todo el pedido cuando el contexto ya lo resuelve"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_019"
+      ],
+      "supersedes": [
+        "convrec_015"
+      ],
+      "example_customer_message": "el segundo que me mostraste, ¿viene en otro color?",
+      "example_is_not_fact": true,
+      "closet_notes": "Resolver contra productos mostrados en el turno, no inventar."
+    },
+    {
+      "pattern_id": "pb_020",
+      "intent": "price_question",
+      "situation": "price_question",
+      "goal": "informar el precio real del producto",
+      "signals": [
+        "Cliente pregunta cuánto cuesta un producto"
+      ],
+      "behavior": [
+        "Responder con el precio real desde el catálogo/negocio",
+        "Incluir moneda y, si aplica, condiciones (envío incluido, promociones vigentes)"
+      ],
+      "avoid": [
+        "Inventar o estimar un precio no verificado"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_020"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿cuánto sale?",
+      "example_is_not_fact": true,
+      "closet_notes": "Precio solo de catalog.search / hits previos; nunca del LLM."
+    },
+    {
+      "pattern_id": "pb_021",
+      "intent": "availability_question",
+      "situation": "availability_question",
+      "goal": "confirmar disponibilidad real del producto",
+      "signals": [
+        "Cliente pregunta si hay disponibilidad de un producto/variante"
+      ],
+      "behavior": [
+        "Consultar stock real antes de responder",
+        "Ser específico (sí/no, o parcial por variante)"
+      ],
+      "avoid": [
+        "Responder 'sí hay stock' sin haberlo verificado"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_021"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿tienen disponible ahora?",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_022",
+      "intent": "stock_question",
+      "situation": "stock_question",
+      "goal": "informar la cantidad o estado real de stock",
+      "signals": [
+        "Cliente pregunta cuánto stock queda o si es limitado"
+      ],
+      "behavior": [
+        "Responder con el dato real de stock si está disponible; si no, indicar disponible/no disponible sin inventar cantidades"
+      ],
+      "avoid": [
+        "Inventar cantidades exactas de stock no verificadas",
+        "Usar presión de escasez ('quedan pocas') sin dato real"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_022"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿queda poco stock?",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_023",
+      "intent": "variants_question",
+      "situation": "variants_question",
+      "goal": "informar variantes reales disponibles del producto",
+      "signals": [
+        "Cliente pregunta qué variantes (color, talla, modelo) existen"
+      ],
+      "behavior": [
+        "Listar variantes reales desde catálogo"
+      ],
+      "avoid": [
+        "Inventar variantes no listadas en catálogo"
+      ],
+      "next_action": "recommend",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_023"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿en qué colores viene?",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_024",
+      "intent": "size_info_question",
+      "situation": "size_info_question",
+      "goal": "informar tallas reales disponibles y ayudar a elegir la correcta",
+      "signals": [
+        "Cliente pregunta por talla disponible o guía de tallas"
+      ],
+      "behavior": [
+        "Responder con tallas reales en stock",
+        "Ofrecer guía de tallas si existe como conocimiento del negocio"
+      ],
+      "avoid": [
+        "Inventar una tabla de tallas no provista por el negocio"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_024"
+      ],
+      "supersedes": [],
+      "example_customer_message": "no sé qué talla pedir",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_025",
+      "intent": "color_info_question",
+      "situation": "color_info_question",
+      "goal": "informar colores reales disponibles",
+      "signals": [
+        "Cliente pregunta qué colores hay disponibles"
+      ],
+      "behavior": [
+        "Responder con colores reales en stock del producto"
+      ],
+      "avoid": [
+        "Inventar colores no disponibles en catálogo"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_025"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿qué colores tiene este modelo?",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_026",
+      "intent": "feature_info_question",
+      "situation": "feature_info_question",
+      "goal": "informar características reales del producto",
+      "signals": [
+        "Cliente pregunta por material, especificaciones u otros detalles técnicos"
+      ],
+      "behavior": [
+        "Responder con datos reales de ficha de producto",
+        "Si el dato no existe en la ficha, decirlo en vez de inventarlo"
+      ],
+      "avoid": [
+        "Inventar características no verificadas"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_026"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿de qué material está hecho?",
+      "example_is_not_fact": true,
+      "closet_notes": "Features solo de ficha/descripción del catálogo."
+    },
+    {
+      "pattern_id": "pb_027",
+      "intent": "customer_hesitation",
+      "situation": "customer_hesitation",
+      "goal": "ayudar a decidir sin presionar",
+      "signals": [
+        "Cliente duda entre opciones o expresa inseguridad para decidir",
+        "Cliente duda entre opciones o no logra decidir ('no sé cuál elegir', 'mmm no estoy seguro')",
+        "Puede repetir preguntas ya respondidas por inseguridad, no por falta de contexto"
+      ],
+      "behavior": [
+        "Ofrecer un criterio simple de comparación",
+        "Reducir opciones si son demasiadas",
+        "Mantener tono seguro, no condescendiente",
+        "Ofrecer un criterio simple de comparación (precio, uso, disponibilidad) en vez de repetir la misma lista",
+        "Reducir el número de opciones si son demasiadas",
+        "Mantener un tono neutro y seguro, no inseguro ni condescendiente"
+      ],
+      "avoid": [
+        "Presionar para cerrar la venta",
+        "Repetir la misma lista sin aportar nada nuevo",
+        "Responder con muletillas de inseguridad ('no sé', 'tal vez', 'eh...') que erosionan confianza",
+        "Repetir literalmente la recomendación anterior sin aportar nada nuevo"
+      ],
+      "next_action": "handle_objection",
+      "skill": "objection_handling",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog",
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_027"
+      ],
+      "supersedes": [
+        "convrec_007"
+      ],
+      "example_customer_message": "no sé cuál elegir, las dos me gustan",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_028",
+      "intent": "recommendation_rejection",
+      "situation": "recommendation_rejection",
+      "goal": "recuperar la conversación tras un rechazo sin insistir",
+      "signals": [
+        "Cliente indica que lo mostrado no le sirve",
+        "Cliente indica explícitamente que lo mostrado no sirve ('no es lo que busco', 'no me gusta ninguno')",
+        "Puede incluir una razón (precio, estilo, talla) o ser genérico"
+      ],
+      "behavior": [
+        "Reconocer el rechazo brevemente",
+        "Pedir aclaración puntual solo si es necesario",
+        "Cambiar de dirección real en la siguiente búsqueda",
+        "Reconocer el rechazo sin justificar en exceso la recomendación anterior",
+        "Pedir (como máximo) una aclaración puntual si la razón no quedó clara",
+        "Cambiar de dirección real en la siguiente búsqueda, no repetir productos similares a los rechazados"
+      ],
+      "avoid": [
+        "Insistir con la misma recomendación reformulada",
+        "Invalidar la preferencia del cliente",
+        "Insistir en la misma recomendación reformulada",
+        "Invalidar la preferencia del cliente ('pero este es mejor que lo que pediste')",
+        "Mostrar de nuevo productos ya rechazados o muy similares"
+      ],
+      "next_action": "search_catalog",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog",
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_028"
+      ],
+      "supersedes": [
+        "convrec_008"
+      ],
+      "example_customer_message": "no, ninguno de esos me convence",
+      "example_is_not_fact": true,
+      "closet_notes": "No repetir la misma dirección rechazada (F1/F5)."
+    },
+    {
+      "pattern_id": "pb_029",
+      "intent": "need_change",
+      "situation": "need_change",
+      "goal": "detectar y adaptarse a un cambio real de necesidad",
+      "signals": [
+        "Cliente cambia de categoría o intención dentro de la misma conversación",
+        "Cliente cambia de tema o categoría dentro de la misma conversación ('en realidad busco otra cosa', pasa de zapatillas a botas)"
+      ],
+      "behavior": [
+        "Reconocer el cambio explícitamente",
+        "Iniciar nueva búsqueda soltando filtros que ya no aplican",
+        "Iniciar una nueva búsqueda con el nuevo criterio, soltando filtros que ya no aplican",
+        "Conservar solo el contexto que siga siendo relevante (ej. talla del cliente)"
+      ],
+      "avoid": [
+        "Mezclar resultados de la necesidad anterior con la nueva",
+        "Ignorar el cambio y seguir respondiendo a la necesidad original"
+      ],
+      "next_action": "search_catalog",
+      "skill": "sales_discovery",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog",
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_029"
+      ],
+      "supersedes": [
+        "convrec_014"
+      ],
+      "example_customer_message": "en realidad mejor mostrame zapatillas, no botas",
+      "example_is_not_fact": true,
+      "closet_notes": "Nueva búsqueda conservando preferencias estables (talla/presupuesto)."
+    },
+    {
+      "pattern_id": "pb_030",
+      "intent": "new_preference_provided",
+      "situation": "new_preference_provided",
+      "goal": "incorporar una nueva preferencia como filtro adicional",
+      "signals": [
+        "Cliente añade una condición nueva sobre la búsqueda ya en curso"
+      ],
+      "behavior": [
+        "Aplicar la preferencia como filtro adicional sobre el contexto actual",
+        "Confirmar el ajuste aplicado"
+      ],
+      "avoid": [
+        "Ignorar la preferencia nueva y repetir resultados anteriores"
+      ],
+      "next_action": "search_catalog",
+      "skill": "sales_discovery",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog",
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_030"
+      ],
+      "supersedes": [],
+      "example_customer_message": "prefiero algo más económico",
+      "example_is_not_fact": true,
+      "closet_notes": "Presupuesto/talla/color explícitos → preference_patch con procedencia."
+    },
+    {
+      "pattern_id": "pb_031",
+      "intent": "multiple_questions",
+      "situation": "multiple_questions",
+      "goal": "responder de forma ordenada a varias preguntas en un mismo mensaje",
+      "signals": [
+        "Cliente hace más de una pregunta en el mismo mensaje"
+      ],
+      "behavior": [
+        "Responder cada pregunta de forma clara y en orden",
+        "No omitir ninguna sin responder"
+      ],
+      "avoid": [
+        "Responder solo una de las preguntas e ignorar el resto"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog",
+        "shop_knowledge"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_031"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿cuánto cuesta, hay en negro y en cuánto llega?",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_032",
+      "intent": "off_context_question",
+      "situation": "off_context_question",
+      "goal": "responder con transparencia una pregunta fuera del flujo actual",
+      "signals": [
+        "Pregunta que no está relacionada con la búsqueda o venta en curso"
+      ],
+      "behavior": [
+        "Responder si hay conocimiento empresarial real disponible",
+        "Si no hay fuente confiable, decirlo y ofrecer escalar",
+        "Retomar el hilo de compra después"
+      ],
+      "avoid": [
+        "Inventar una respuesta cuando no hay fuente empresarial verificada"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [
+        "shop_knowledge"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_032"
+      ],
+      "supersedes": [],
+      "example_customer_message": "che, ¿tienen local físico en el centro?",
+      "example_is_not_fact": true,
+      "closet_notes": "Si no está en shop_knowledge ni catálogo → escalar; no inventar."
+    },
+    {
+      "pattern_id": "pb_033",
+      "intent": "repeated_question",
+      "situation": "repeated_question",
+      "goal": "reconocer la repetición y responder sin fricción",
+      "signals": [
+        "El cliente vuelve a preguntar algo ya respondido en la conversación"
+      ],
+      "behavior": [
+        "Responder de nuevo sin señalarlo como un error del cliente",
+        "Considerar si la repetición indica que la respuesta anterior no fue clara"
+      ],
+      "avoid": [
+        "Hacer notar de forma incómoda que 'ya lo había dicho'"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "low",
+      "derived_from": [
+        "adri_033"
+      ],
+      "supersedes": [],
+      "example_customer_message": "perdón, ¿me confirmás el precio de nuevo?",
+      "example_is_not_fact": true,
+      "closet_notes": "No reenviar la misma lista; rephrasing breve (F1)."
+    },
+    {
+      "pattern_id": "pb_034",
+      "intent": "reference_to_earlier_point",
+      "situation": "reference_to_earlier_point",
+      "goal": "resolver una referencia implícita al historial de la conversación",
+      "signals": [
+        "Cliente hace alusión a algo mencionado antes sin repetirlo textualmente"
+      ],
+      "behavior": [
+        "Usar el historial de la conversación para resolver la referencia con precisión"
+      ],
+      "avoid": [
+        "Perder contexto y responder como si fuera la primera mención"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "adri_034"
+      ],
+      "supersedes": [],
+      "example_customer_message": "como te decía antes, con eso me alcanza",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_035",
+      "intent": "purchase_intent",
+      "situation": "purchase_intent",
+      "goal": "detectar y encauzar una intención clara de comprar",
+      "signals": [
+        "Frases de decisión ('me lo llevo', 'listo, lo quiero', 'dale, ese')",
+        "Frases de decisión ('me quedo con este', 'lo voy a comprar', 'perfecto, gracias')",
+        "Suele aparecer en el último turno de la conversación"
+      ],
+      "behavior": [
+        "Dejar de recomendar productos adicionales",
+        "Confirmar el producto elegido",
+        "Avanzar al siguiente paso del proceso de conversión",
+        "Confirmar el producto elegido y pasar al flujo de conversión (datos, pago, reserva)",
+        "Responder de forma breve y orientada a cerrar el proceso"
+      ],
+      "avoid": [
+        "Seguir mostrando alternativas o insistir con upsell cuando el cliente ya decidió",
+        "Seguir mostrando alternativas o intentando upsell cuando el cliente ya decidió",
+        "Alargar la conversación con preguntas no necesarias para completar la compra"
+      ],
+      "next_action": "request_confirmation",
+      "skill": "sales_closing",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog",
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_035"
+      ],
+      "supersedes": [
+        "convrec_013"
+      ],
+      "example_customer_message": "listo, me quedo con ese",
+      "example_is_not_fact": true,
+      "closet_notes": "Código exacto o variante mostrada; runtime bloquea order.create sin eso (F4)."
+    },
+    {
+      "pattern_id": "pb_036",
+      "intent": "reservation_intent",
+      "situation": "reservation_intent",
+      "goal": "gestionar una intención de reserva sin pago inmediato",
+      "signals": [
+        "Cliente quiere apartar/reservar un producto"
+      ],
+      "behavior": [
+        "Confirmar condiciones reales de reserva del negocio (plazo, seña si aplica)"
+      ],
+      "avoid": [
+        "Inventar condiciones de reserva no confirmadas por el negocio"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [
+        "shop_knowledge"
+      ],
+      "capability": "shop_answer_only",
+      "priority": "medium",
+      "derived_from": [
+        "adri_036"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿me lo pueden guardar hasta mañana?",
+      "example_is_not_fact": true,
+      "closet_notes": "Closet no reserva. Explicar y ofrecer compra normal; no inventar flujo de reserva."
+    },
+    {
+      "pattern_id": "pb_037",
+      "intent": "payment_how_to",
+      "situation": "payment_how_to",
+      "goal": "informar el proceso real de pago",
+      "signals": [
+        "Cliente pregunta cómo puede pagar o los pasos del pago"
+      ],
+      "behavior": [
+        "Explicar el proceso real de pago del negocio (medios, pasos)"
+      ],
+      "avoid": [
+        "Inventar pasos de pago no confirmados"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [
+        "shop_knowledge"
+      ],
+      "capability": "shop_answer_only",
+      "priority": "high",
+      "derived_from": [
+        "adri_037"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿cómo hago para pagar?",
+      "example_is_not_fact": true,
+      "closet_notes": "QR lo emite Cobros. Adri explica el proceso; no llama payment.create_qr."
+    },
+    {
+      "pattern_id": "pb_038",
+      "intent": "order_placement_intent",
+      "situation": "order_placement_intent",
+      "goal": "concretar el pedido con los datos mínimos necesarios",
+      "signals": [
+        "Cliente confirma que quiere avanzar con el pedido"
+      ],
+      "behavior": [
+        "Confirmar producto, cantidad y variante final",
+        "Solicitar solo los datos estrictamente necesarios"
+      ],
+      "avoid": [
+        "Pedir datos no necesarios para el pedido",
+        "Volver a mostrar catálogo en este punto"
+      ],
+      "next_action": "create_order",
+      "skill": "sales_closing",
+      "allowed_tools": [
+        "catalog.search",
+        "cart.add",
+        "order.create"
+      ],
+      "knowledge_sources": [
+        "catalog",
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_038"
+      ],
+      "supersedes": [],
+      "example_customer_message": "quiero hacer el pedido de esa campera",
+      "example_is_not_fact": true,
+      "closet_notes": "Requiere confirmación + variante real; Adri no cobra."
+    },
+    {
+      "pattern_id": "pb_039",
+      "intent": "data_collection",
+      "situation": "data_collection",
+      "goal": "recolectar datos del cliente de forma eficiente y clara",
+      "signals": [
+        "El flujo de conversión requiere datos del cliente (dirección, contacto, etc.)"
+      ],
+      "behavior": [
+        "Pedir los datos en un orden claro",
+        "Confirmar los datos recibidos antes de continuar"
+      ],
+      "avoid": [
+        "Pedir todos los datos en un solo mensaje largo y confuso",
+        "No confirmar los datos ingresados"
+      ],
+      "next_action": "request_confirmation",
+      "skill": "sales_closing",
+      "allowed_tools": [],
+      "knowledge_sources": [
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "adri_039"
+      ],
+      "supersedes": [],
+      "example_customer_message": "listo, ¿qué datos necesitás?",
+      "example_is_not_fact": true,
+      "closet_notes": "Datos de envío los pide Ops tras pago; aquí solo lo mínimo para el pedido."
+    },
+    {
+      "pattern_id": "pb_040",
+      "intent": "shipping_question",
+      "situation": "shipping_question",
+      "goal": "informar información real de envío",
+      "signals": [
+        "Cliente pregunta por costos, tiempos o zonas de envío"
+      ],
+      "behavior": [
+        "Responder con información real de envío del negocio"
+      ],
+      "avoid": [
+        "Inventar costos o tiempos de envío no confirmados"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [
+        "shop_knowledge"
+      ],
+      "capability": "shop_answer_only",
+      "priority": "medium",
+      "derived_from": [
+        "adri_040"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿cuánto cuesta el envío a mi zona?",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_041",
+      "intent": "order_tracking",
+      "situation": "order_tracking",
+      "goal": "informar el estado real de un pedido en curso",
+      "signals": [
+        "Cliente pregunta por el estado de un pedido ya realizado"
+      ],
+      "behavior": [
+        "Consultar el estado real del pedido antes de responder"
+      ],
+      "avoid": [
+        "Inventar un estado o fecha de entrega no verificados"
+      ],
+      "next_action": "handoff",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [],
+      "capability": "handoff",
+      "priority": "high",
+      "derived_from": [
+        "adri_041"
+      ],
+      "supersedes": [],
+      "example_customer_message": "¿en qué estado está mi pedido?",
+      "example_is_not_fact": true,
+      "closet_notes": "Adri no tiene tool de tracking; pasar a humano/postventa."
+    },
+    {
+      "pattern_id": "pb_042",
+      "intent": "return_request",
+      "situation": "return_request",
+      "goal": "gestionar una solicitud de devolución según política real",
+      "signals": [
+        "Cliente quiere devolver un producto"
+      ],
+      "behavior": [
+        "Verificar elegibilidad según política real de devoluciones",
+        "Explicar el proceso concreto a seguir"
+      ],
+      "avoid": [
+        "Aceptar o rechazar una devolución sin consultar la política real"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [
+        "shop_knowledge"
+      ],
+      "capability": "shop_answer_only",
+      "priority": "medium",
+      "derived_from": [
+        "adri_042"
+      ],
+      "supersedes": [],
+      "example_customer_message": "quiero devolver este producto",
+      "example_is_not_fact": true,
+      "closet_notes": "Closet: returns=false. Responder desde shop_knowledge; no iniciar devolución."
+    },
+    {
+      "pattern_id": "pb_043",
+      "intent": "exchange_request",
+      "situation": "exchange_request",
+      "goal": "gestionar una solicitud de cambio de producto (talla, color, modelo)",
+      "signals": [
+        "Cliente quiere cambiar un producto ya comprado por otra variante"
+      ],
+      "behavior": [
+        "Verificar disponibilidad real de la variante deseada y la política de cambios"
+      ],
+      "avoid": [
+        "Confirmar un cambio sin verificar stock real de la variante pedida"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [
+        "shop_knowledge"
+      ],
+      "capability": "shop_answer_only",
+      "priority": "medium",
+      "derived_from": [
+        "adri_043"
+      ],
+      "supersedes": [],
+      "example_customer_message": "quiero cambiar la talla de lo que compré",
+      "example_is_not_fact": true,
+      "closet_notes": "Closet: exchanges=false. Responder desde shop_knowledge."
+    },
+    {
+      "pattern_id": "pb_044",
+      "intent": "complaint_handling",
+      "situation": "complaint_handling",
+      "goal": "recoger un reclamo del cliente de forma empática y encaminarlo",
+      "signals": [
+        "Cliente expresa una queja o problema con su compra"
+      ],
+      "behavior": [
+        "Escuchar sin minimizar el problema",
+        "Recoger los datos clave del caso",
+        "Encaminar al proceso real de resolución o escalar"
+      ],
+      "avoid": [
+        "Responder de forma defensiva o desestimar el reclamo"
+      ],
+      "next_action": "escalate",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [],
+      "capability": "escalate",
+      "priority": "high",
+      "derived_from": [
+        "adri_044"
+      ],
+      "supersedes": [],
+      "example_customer_message": "esto llegó roto, no estoy conforme",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_045",
+      "intent": "order_problem",
+      "situation": "order_problem",
+      "goal": "diagnosticar y encaminar un problema puntual con un pedido",
+      "signals": [
+        "Cliente reporta un problema específico con su pedido (faltante, error, demora)"
+      ],
+      "behavior": [
+        "Pedir el detalle mínimo necesario (número de pedido, tipo de problema)",
+        "Encaminar según el problema (seguimiento, reclamo, escalamiento)"
+      ],
+      "avoid": [
+        "Prometer una solución sin tener la información o autoridad real para darla"
+      ],
+      "next_action": "escalate",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [],
+      "capability": "escalate",
+      "priority": "high",
+      "derived_from": [
+        "adri_045"
+      ],
+      "supersedes": [],
+      "example_customer_message": "me llegó incompleto el pedido",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_046",
+      "intent": "escalation_to_human",
+      "situation": "escalation_to_human",
+      "goal": "transferir la conversación a un humano cuando corresponde",
+      "signals": [
+        "Cliente lo pide explícitamente, o el caso excede el conocimiento/alcance del agente (reclamos complejos, errores técnicos, casos sensibles)"
+      ],
+      "behavior": [
+        "Reconocer el límite con transparencia",
+        "Escalar de forma fluida, sin hacer sentir al cliente ignorado",
+        "Dar contexto claro de la derivación si el sistema lo permite"
+      ],
+      "avoid": [
+        "Insistir en resolver solo un caso que claramente requiere intervención humana",
+        "Escalar sin dar ningún contexto de lo ya conversado"
+      ],
+      "next_action": "escalate",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [
+        "working_state"
+      ],
+      "capability": "escalate",
+      "priority": "high",
+      "derived_from": [
+        "adri_046"
+      ],
+      "supersedes": [],
+      "example_customer_message": "esto ya es muy complicado, necesito hablar con alguien",
+      "example_is_not_fact": true
+    },
+    {
+      "pattern_id": "pb_047",
+      "intent": "product_discovery",
+      "situation": "product_discovery",
+      "goal": "help_customer_find_matching_product_from_vague_or_specific_request",
+      "signals": [
+        "Primer mensaje de la conversación",
+        "Cliente describe una necesidad o caso de uso ('sneakers para correr', 'algo cómodo')",
+        "No hay contexto previo de productos mostrados"
+      ],
+      "behavior": [
+        "Interpretar la necesidad funcional detrás del mensaje (uso, ocasión, atributo clave)",
+        "Devolver un número acotado de opciones relevantes (2-4), no una lista extensa",
+        "Cerrar el turno invitando a profundizar en una opción concreta"
+      ],
+      "avoid": [
+        "Pedir demasiados datos antes de mostrar algo",
+        "Mostrar productos que no calzan con la necesidad declarada",
+        "Responder con una lista larga sin foco"
+      ],
+      "next_action": "answer",
+      "skill": "sales_discovery",
+      "allowed_tools": [],
+      "knowledge_sources": [],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "convrec_001"
+      ],
+      "supersedes": [],
+      "example_customer_message": "",
+      "example_is_not_fact": true,
+      "closet_notes": "Apertura amplia: una pregunta de discovery antes de listar (F5)."
+    },
+    {
+      "pattern_id": "pb_048",
+      "intent": "positive_feedback",
+      "situation": "positive_feedback",
+      "goal": "capitalize_on_a_positive_signal_to_advance_the_conversation",
+      "signals": [
+        "Cliente expresa satisfacción o interés explícito ('me gusta', 'es lo que buscaba', 'está lindo')"
+      ],
+      "behavior": [
+        "Confirmar brevemente y avanzar hacia el siguiente paso natural (detalle del producto, disponibilidad, compra)",
+        "No sobre-explicar ni añadir información no pedida"
+      ],
+      "avoid": [
+        "Ignorar la señal positiva y seguir mostrando más opciones sin necesidad",
+        "Aprovechar la señal positiva para forzar upsell no solicitado"
+      ],
+      "next_action": "request_confirmation",
+      "skill": "sales_closing",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "medium",
+      "derived_from": [
+        "convrec_009"
+      ],
+      "supersedes": [],
+      "example_customer_message": "",
+      "example_is_not_fact": true,
+      "closet_notes": "Avanzar al cierre sin empujar; confirmar la opción destacada."
+    },
+    {
+      "pattern_id": "pb_049",
+      "intent": "negative_feedback",
+      "situation": "negative_feedback",
+      "goal": "recognize_dissatisfaction_and_correct_course",
+      "signals": [
+        "Cliente expresa insatisfacción ('no encontré lo que buscaba', 'no es mi estilo', respuestas cortas o frías)",
+        "Puede no incluir una razón explícita"
+      ],
+      "behavior": [
+        "No repetir el mismo enfoque que generó la insatisfacción",
+        "Si la razón no es clara, hacer una pregunta puntual y específica, no una genérica",
+        "Priorizar mostrar catálogo real de nuevo sobre justificar la respuesta anterior"
+      ],
+      "avoid": [
+        "Responder de forma defensiva",
+        "Repetir la recomendación con distinto texto pero mismos productos"
+      ],
+      "next_action": "search_catalog",
+      "skill": "product_recommendation",
+      "allowed_tools": [
+        "catalog.search"
+      ],
+      "knowledge_sources": [
+        "catalog",
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "convrec_010"
+      ],
+      "supersedes": [],
+      "example_customer_message": "",
+      "example_is_not_fact": true,
+      "closet_notes": "Ajustar búsqueda según el rechazo; no insistir."
+    },
+    {
+      "pattern_id": "pb_050",
+      "intent": "conversation_closure",
+      "situation": "conversation_closure",
+      "goal": "close_the_conversation_in_a_way_that_leaves_the_door_open",
+      "signals": [
+        "Cliente agradece o se despide después de una decisión o resolución ('gracias', 'eso es todo')"
+      ],
+      "behavior": [
+        "Confirmar brevemente el cierre",
+        "Dejar abierta la puerta a seguir ayudando sin forzar una nueva venta"
+      ],
+      "avoid": [
+        "Insistir con otra recomendación después de que el cliente cerró el tema",
+        "Cortar la conversación de forma seca"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [],
+      "capability": "adri",
+      "priority": "low",
+      "derived_from": [
+        "convrec_018"
+      ],
+      "supersedes": [],
+      "example_customer_message": "",
+      "example_is_not_fact": true,
+      "closet_notes": "Cerrar con gracia; no reabrir catálogo ni re-saludar."
+    },
+    {
+      "pattern_id": "pb_051",
+      "intent": "conversation_continuity",
+      "situation": "conversation_continuity",
+      "goal": "maintain_context_across_multiple_turns_in_the_same_thread",
+      "signals": [
+        "Conversación con más de un turno (la mayoría de las conversaciones reales tienen entre 2 y 5 turnos)",
+        "El mensaje actual depende de lo dicho antes"
+      ],
+      "behavior": [
+        "Mantener en memoria de corto plazo: productos mostrados, preferencias declaradas, rechazos previos",
+        "Usar ese contexto para no repetir preguntas ya respondidas"
+      ],
+      "avoid": [
+        "Tratar cada turno como una conversación aislada",
+        "Volver a preguntar algo que el cliente ya dijo"
+      ],
+      "next_action": "answer",
+      "skill": "customer_assistance",
+      "allowed_tools": [],
+      "knowledge_sources": [
+        "working_state"
+      ],
+      "capability": "adri",
+      "priority": "high",
+      "derived_from": [
+        "convrec_012"
+      ],
+      "supersedes": [],
+      "example_customer_message": "",
+      "example_is_not_fact": true,
+      "closet_notes": "Mantener contexto; 'hola' a mitad no reinicia (F1)."
+    }
+  ]
+}

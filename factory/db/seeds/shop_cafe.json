@@ -1,0 +1,163 @@
+{
+  "tenant_id": "dddddddd-dddd-dddd-dddd-dddddddddddd",
+  "branch_name": "Del Campus Café",
+  "profile": {
+    "name": "Del Campus Café",
+    "summary": "Cafetería tradicional cruceña frente al Campus Universitario de la UAGRM. Bebidas calientes y frías, café criollo y horneados para desayunar o merendar con amigos.",
+    "categories": [
+      "Empanadas",
+      "Panadería",
+      "Gaseosas",
+      "Jugos",
+      "Aguas",
+      "Café",
+      "Licuados",
+      "Refrigerios"
+    ],
+    "audience": "Estudiantes, docentes, personal administrativo, trabajadores y público en general (desde 15 años). Buscan desayuno y merienda con café tradicional cruceño y un horneado.",
+    "differentiator": "Cafetería tradicional cruceña, inspirada en las cafeterías de antes, ubicada frente a la UAGRM (no dentro del campus).",
+    "hours": "Lunes a viernes en horario discontinuo: 07:30–12:30 y 15:30–20:00. Sábados, domingos y feriados: cerrado al público; solo pedidos anticipados. Pico de movimiento: 09:00–11:00. En vacaciones universitarias se suspende la atención habitual y se mantienen ventas bajo demanda con anticipación. Cambios de horario se anuncian en Facebook.",
+    "city": "Santa Cruz de la Sierra, Bolivia",
+    "address": "Calle Venezuela N.º 58, frente al Campus Universitario de la UAGRM",
+    "location_note": "Frente a la universidad, no dentro de sus instalaciones. Abierto desde 2024.",
+    "currency": "BOB",
+    "payment": "Efectivo y QR en bolivianos. No transferencia. No tarjeta. No factura.",
+    "channels": ["WhatsApp", "Mostrador", "Facebook"],
+    "pickup": true,
+    "delivery": true,
+    "delivery_zones": "Coordinación por WhatsApp; envíos con apps de delivery (Yango o inDrive), también dentro de la universidad. No inventar el costo del envío.",
+    "delivery_cost": "según la app de delivery y la distancia; no inventar un monto",
+    "since_year": "2024"
+  },
+  "policies": {
+    "returns": false,
+    "exchanges": false,
+    "cancel": "Sí se puede cancelar. Se cobra el 50 % del pedido para recuperar materia prima. El momento exacto del cobro lo confirma una persona responsable; el agente no inventa el procedimiento.",
+    "claims": "Reclamos por WhatsApp con una persona responsable (sistema de tickets). Si el local entregó el producto equivocado o en mal estado y se comprueba, el negocio cubre o reemplaza. No hay devoluciones ni cambios de producto por decisión del cliente.",
+    "payment_window_min": 15,
+    "pickup": true,
+    "delivery": true,
+    "promos": "Precios mayoristas solo con pedido anticipado y según escala (10–19: Bs 3,50; 20–29: Bs 3,40; 30–49: Bs 3,30; 50–99: Bs 3,20; 100+: Bs 3,10 por unidad). No inventar otras promociones ni descuentos de estudiante. Facebook anuncia cambios.",
+    "order_status": "Pedidos grandes o de evento: mínimo 10 unidades, 24 h de anticipación y 100 % pagado por adelantado; solo entrega de productos (sin servicio de evento). Pedidos de mostrador o unidades sueltas del catálogo no exigen ese mínimo. Fuera de horario el agente puede tomar el pedido para el próximo día de atención; en el receso del mediodía informa que se atiende al reabrir. Entrega el mismo día fuera de horario solo si hay stock verificado.",
+    "warranty": "Se ofrecen productos frescos. Ingredientes confirmados de horneados: harina de trigo y queso. Ante alergias, no garantizar ausencia de alérgenos; derivar si falta dato.",
+    "catalog_source": "Lista viva del piloto (53 productos). Precio y stock salen del catálogo/Postgres, no del modelo."
+  },
+  "voice": {
+    "address": "usted",
+    "tone": "cercana",
+    "traits": [
+      "Español cruceño, profesional y cercano",
+      "Usted de entrada; una expresión local por mensaje",
+      "Ortografía normal: nomás, pues y no. Precio y pago solo si están en FACTS"
+    ],
+    "emojis": "moderate",
+    "words_use": ["nomás", "de una", "buenazo", "macanudo", "cafecito", "prontito"],
+    "words_avoid": ["che", "juepucha", "caricatura", "voseo", "rioplatense", "doña"],
+    "example_replies": [
+      "¡Buenas! ¿Qué se le antoja hoy?",
+      "De una, ya se lo anoto. Le confirmo el monto.",
+      "Ese está buenazo, se lo recomiendo."
+    ]
+  },
+  "vocabulary": {
+    "item": "producto"
+  },
+  "faqs": [
+    {
+      "id": "where",
+      "category": "Ubicación",
+      "question": "¿Dónde están?",
+      "answer": "Del Campus Café está en Santa Cruz de la Sierra, Calle Venezuela N.º 58, frente al Campus Universitario de la UAGRM. No estamos dentro de la universidad."
+    },
+    {
+      "id": "horario",
+      "category": "Horario",
+      "question": "¿Cuál es el horario?",
+      "answer": "De lunes a viernes: 07:30 a 12:30 y 15:30 a 20:00. Sábados, domingos y feriados estamos cerrados al público; solo pedidos anticipados. El mayor movimiento suele ser de 09:00 a 11:00. Los cambios se anuncian en Facebook."
+    },
+    {
+      "id": "catalog",
+      "category": "Productos",
+      "question": "¿Qué venden?",
+      "answer": "El catálogo vivo tiene 53 productos: empanadas al horno y fritas, cuñapés, donuts, croissants, pan integral, gaseosas (Coca-Cola, Fanta, Sprite, Malta Real), jugos envasados (Del Valle, Aquarius), aguas y bebidas (Agua Vital, Power, Cabaña), café criollo y café con leche (200 ml y 400 ml), Toddy, mate, licuados de frutilla/papaya con agua o leche y banana con leche, mocochinchi, limonada, lima, panza rebozada y asadito frito. Precio y disponibilidad los leo del catálogo; no invento."
+    },
+    {
+      "id": "sizes",
+      "category": "Productos",
+      "question": "¿Tienen diferentes tamaños?",
+      "answer": "Sí, según el producto del catálogo. Café y café con leche: 200 ml y 400 ml. Mate: 200 ml y grande 400 ml. Gaseosas, jugos y aguas vienen en presentaciones distintas (mini, 350 ml, lata, 500 ml, 600 ml, 1 L, 1.5 L, 2 L, 3 L, etc.). Licuados se ofrecen con agua o con leche. Siempre confirmo el ítem exacto y su precio en el catálogo."
+    },
+    {
+      "id": "prep",
+      "category": "Productos",
+      "question": "¿Se preparan al momento o ya están listos?",
+      "answer": "Según el tipo: café, mate, Toddy, licuados, limonada, lima y mocochinchi se preparan al pedir. Gaseosas, jugos envasados y aguas están listos. Empanadas, panadería, panza y asadito se ofrecen frescos del día según el stock del catálogo. El café es criollo y se puede personalizar dentro de lo disponible."
+    },
+    {
+      "id": "day-only",
+      "category": "Productos",
+      "question": "¿Hay productos solo algunos días?",
+      "answer": "El catálogo actual no marca productos por día de la semana. Se vende lo que figure disponible en stock. Si algo no está, lo digo con claridad."
+    },
+    {
+      "id": "sold-out",
+      "category": "Productos",
+      "question": "¿Qué está agotado?",
+      "answer": "No hay una lista fija de discontinuados aparte del catálogo. Consulto disponibilidad (stock) antes de confirmar. Si un ítem ya no está en el catálogo, no lo ofrezco."
+    },
+    {
+      "id": "panza-asadito",
+      "category": "Productos",
+      "question": "¿Qué es panza y asadito?",
+      "answer": "Panza es panza rebozada (Bs 8). Asadito es asadito frito (Bs 6). Ambos están en el catálogo."
+    },
+    {
+      "id": "price",
+      "category": "Precios",
+      "question": "¿Cuánto cuesta?",
+      "answer": "El precio sale del catálogo vigente. Por ejemplo, café 200 ml Bs 2, café 400 ml Bs 4, café con leche 200 ml Bs 3, café con leche 400 ml Bs 6. Dime el producto y te paso el monto exacto; no invento precios."
+    },
+    {
+      "id": "wholesale",
+      "category": "Precios",
+      "question": "¿Hay precio por mayor?",
+      "answer": "Sí, con pedido anticipado. Escala por unidad: 10–19 Bs 3,50; 20–29 Bs 3,40; 30–49 Bs 3,30; 50–99 Bs 3,20; 100 o más Bs 3,10. El mínimo de 10 unidades aplica a pedidos mayoristas/anticipados, no a una unidad suelta de mostrador. Pedidos grandes: 24 h de anticipación y pago del 100 % por adelantado."
+    },
+    {
+      "id": "combos",
+      "category": "Promociones",
+      "question": "¿Tienen combos o promo de estudiante?",
+      "answer": "En el catálogo actual no hay combos armados ni descuento de estudiante documentado. No invento promociones. Si Facebook anuncia algo vigente, lo confirma una persona responsable."
+    },
+    {
+      "id": "pay",
+      "category": "Pagos",
+      "question": "¿Cómo puedo pagar?",
+      "answer": "Efectivo o QR, en bolivianos. No aceptamos transferencia ni tarjeta. No emitimos factura. En mostrador el cobro pasa por la caja. Por WhatsApp, Cobros emite el QR; usted tiene 15 minutos para pagarlo. El mensaje del cliente no confirma el pago: solo el banco/adaptador. Yo leo ese estado y sigo la conversación. Si hay problema de pago, coordine con el propietario; el pago sigue siendo obligatorio."
+    },
+    {
+      "id": "delivery",
+      "category": "Delivery",
+      "question": "¿Hacen delivery o se puede consumir en el local?",
+      "answer": "Sí puede consumir en el local y todo es para llevar. Delivery se coordina por WhatsApp con apps como Yango o inDrive, también dentro de la universidad. No invento el costo del envío. Reservas con pago por adelantado. Catering/eventos: solo entrega de productos, sin servicio extra."
+    },
+    {
+      "id": "cancel",
+      "category": "Políticas",
+      "question": "¿Puedo cancelar o devolver?",
+      "answer": "Se puede cancelar cobrando el 50 % del pedido (materia prima). No hay cambios ni devoluciones por decisión del cliente. Si el error fue del local o el producto llegó en mal estado, el negocio responde. Si un ítem se agota después del pedido, se devuelve el dinero de ese ítem."
+    },
+    {
+      "id": "allergies",
+      "category": "Ingredientes",
+      "question": "¿Tiene alérgenos o opciones especiales?",
+      "answer": "De horneados está documentado harina de trigo y queso. No garantizo que un producto esté libre de alérgenos ni opciones para restricciones alimentarias sin dato verificado. Ante duda, derivo a una persona responsable."
+    },
+    {
+      "id": "closed-hours",
+      "category": "Pedidos",
+      "question": "¿Puedo pedir cuando están cerrados?",
+      "answer": "Sí puedo recibir el pedido fuera de horario para el próximo día de atención. En el receso del mediodía le indico que se atiende al reabrir. Entrega el mismo día fuera de horario solo si verifico stock suficiente (por ejemplo pedidos chicos al por mayor de 10 o 20 unidades). No confirmo entrega sin disponibilidad."
+    }
+  ]
+}

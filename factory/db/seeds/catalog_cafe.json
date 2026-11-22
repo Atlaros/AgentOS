@@ -1,0 +1,811 @@
+{
+  "tenant_id": "dddddddd-dddd-dddd-dddd-dddddddddddd",
+  "shop": {
+    "name": "Cafetería (provisional)"
+  },
+  "branch": {
+    "name": "Cafetería (provisional)"
+  },
+  "currency_note": "BOB — cafetería piloto (CATALOG_SEED=cafe). SKU c001–c054.",
+  "products": [
+    {
+      "sku": "c001",
+      "name": "Empanadas integrales",
+      "description": "Empanadas integrales",
+      "variant_sku": "c001",
+      "currency": "BOB",
+      "amount": "4.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "empanadas",
+        "codigo": "c001",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c002",
+      "name": "Empanadas de queso y cebolla",
+      "description": "Empanadas de queso y cebolla",
+      "variant_sku": "c002",
+      "currency": "BOB",
+      "amount": "4.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "empanadas",
+        "codigo": "c002",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c003",
+      "name": "Empanadas de mortadela y queso",
+      "description": "Empanadas de mortadela y queso",
+      "variant_sku": "c003",
+      "currency": "BOB",
+      "amount": "4.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "empanadas",
+        "codigo": "c003",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c004",
+      "name": "Empanadas de arroz",
+      "description": "Empanadas de arroz",
+      "variant_sku": "c004",
+      "currency": "BOB",
+      "amount": "4.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "empanadas",
+        "codigo": "c004",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c005",
+      "name": "Cuñapés",
+      "description": "Cuñapés",
+      "variant_sku": "c005",
+      "currency": "BOB",
+      "amount": "4.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "panaderia",
+        "codigo": "c005",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c006",
+      "name": "Empanadas de queso fritas",
+      "description": "Empanadas de queso fritas",
+      "variant_sku": "c006",
+      "currency": "BOB",
+      "amount": "5.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "empanadas",
+        "codigo": "c006",
+        "tracks_stock": true,
+        "subcategory": "fritas"
+      }
+    },
+    {
+      "sku": "c007",
+      "name": "Empanadas de charque fritas",
+      "description": "Empanadas de charque fritas",
+      "variant_sku": "c007",
+      "currency": "BOB",
+      "amount": "4.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "empanadas",
+        "codigo": "c007",
+        "tracks_stock": true,
+        "subcategory": "fritas"
+      }
+    },
+    {
+      "sku": "c008",
+      "name": "Empanadas de pollo fritas",
+      "description": "Empanadas de pollo fritas",
+      "variant_sku": "c008",
+      "currency": "BOB",
+      "amount": "5.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "empanadas",
+        "codigo": "c008",
+        "tracks_stock": true,
+        "subcategory": "fritas"
+      }
+    },
+    {
+      "sku": "c009",
+      "name": "Empanadas de carne fritas",
+      "description": "Empanadas de carne fritas",
+      "variant_sku": "c009",
+      "currency": "BOB",
+      "amount": "5.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "empanadas",
+        "codigo": "c009",
+        "tracks_stock": true,
+        "subcategory": "fritas"
+      }
+    },
+    {
+      "sku": "c010",
+      "name": "Donuts con glaseado de chocolate",
+      "description": "Donuts con glaseado de chocolate",
+      "variant_sku": "c010",
+      "currency": "BOB",
+      "amount": "5.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "panaderia",
+        "codigo": "c010",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c011",
+      "name": "Croissants con relleno de dulce de leche",
+      "description": "Croissants con relleno de dulce de leche",
+      "variant_sku": "c011",
+      "currency": "BOB",
+      "amount": "5.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "panaderia",
+        "codigo": "c011",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c012",
+      "name": "Pan integral",
+      "description": "Pan integral",
+      "variant_sku": "c012",
+      "currency": "BOB",
+      "amount": "2.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "panaderia",
+        "codigo": "c012",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c013",
+      "name": "Coca-Cola mini",
+      "description": "Coca-Cola mini",
+      "variant_sku": "c013",
+      "currency": "BOB",
+      "amount": "2.50",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "gaseosas",
+        "codigo": "c013",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c014",
+      "name": "Coca-Cola 350ml",
+      "description": "Coca-Cola 350ml",
+      "variant_sku": "c014",
+      "currency": "BOB",
+      "amount": "5.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "gaseosas",
+        "codigo": "c014",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c015",
+      "name": "Coca-Cola lata",
+      "description": "Coca-Cola lata",
+      "variant_sku": "c015",
+      "currency": "BOB",
+      "amount": "10.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "gaseosas",
+        "codigo": "c015",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c016",
+      "name": "Coca-Cola 500ml",
+      "description": "Coca-Cola 500ml",
+      "variant_sku": "c016",
+      "currency": "BOB",
+      "amount": "6.50",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "gaseosas",
+        "codigo": "c016",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c017",
+      "name": "Coca-Cola 600ml",
+      "description": "Coca-Cola 600ml",
+      "variant_sku": "c017",
+      "currency": "BOB",
+      "amount": "5.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "gaseosas",
+        "codigo": "c017",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c018",
+      "name": "Coca-Cola 1.5L",
+      "description": "Coca-Cola 1.5L",
+      "variant_sku": "c018",
+      "currency": "BOB",
+      "amount": "12.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "gaseosas",
+        "codigo": "c018",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c019",
+      "name": "Coca-Cola 2L",
+      "description": "Coca-Cola 2L",
+      "variant_sku": "c019",
+      "currency": "BOB",
+      "amount": "14.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "gaseosas",
+        "codigo": "c019",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c020",
+      "name": "Coca-Cola 3L",
+      "description": "Coca-Cola 3L",
+      "variant_sku": "c020",
+      "currency": "BOB",
+      "amount": "22.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "gaseosas",
+        "codigo": "c020",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c021",
+      "name": "Fanta 350ml",
+      "description": "Fanta 350ml",
+      "variant_sku": "c021",
+      "currency": "BOB",
+      "amount": "5.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "gaseosas",
+        "codigo": "c021",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c022",
+      "name": "Sprite 350ml",
+      "description": "Sprite 350ml",
+      "variant_sku": "c022",
+      "currency": "BOB",
+      "amount": "5.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "gaseosas",
+        "codigo": "c022",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c023",
+      "name": "Sprite lata",
+      "description": "Sprite lata",
+      "variant_sku": "c023",
+      "currency": "BOB",
+      "amount": "10.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "gaseosas",
+        "codigo": "c023",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c024",
+      "name": "Malta Real",
+      "description": "Malta Real",
+      "variant_sku": "c024",
+      "currency": "BOB",
+      "amount": "7.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "gaseosas",
+        "codigo": "c024",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c025",
+      "name": "Del Valle 350ml",
+      "description": "Del Valle 350ml",
+      "variant_sku": "c025",
+      "currency": "BOB",
+      "amount": "4.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "jugos",
+        "codigo": "c025",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c026",
+      "name": "Del Valle 500ml",
+      "description": "Del Valle 500ml",
+      "variant_sku": "c026",
+      "currency": "BOB",
+      "amount": "6.50",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "jugos",
+        "codigo": "c026",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c027",
+      "name": "Del Valle 3L",
+      "description": "Del Valle 3L",
+      "variant_sku": "c027",
+      "currency": "BOB",
+      "amount": "22.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "jugos",
+        "codigo": "c027",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c028",
+      "name": "Aquarius 500ml",
+      "description": "Aquarius 500ml",
+      "variant_sku": "c028",
+      "currency": "BOB",
+      "amount": "6.50",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "jugos",
+        "codigo": "c028",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c029",
+      "name": "Agua Vital 500ml",
+      "description": "Agua Vital 500ml",
+      "variant_sku": "c029",
+      "currency": "BOB",
+      "amount": "5.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "aguas",
+        "codigo": "c029",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c030",
+      "name": "Agua Vital 1L",
+      "description": "Agua Vital 1L",
+      "variant_sku": "c030",
+      "currency": "BOB",
+      "amount": "7.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "aguas",
+        "codigo": "c030",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c031",
+      "name": "Agua Vital 2L",
+      "description": "Agua Vital 2L",
+      "variant_sku": "c031",
+      "currency": "BOB",
+      "amount": "8.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "aguas",
+        "codigo": "c031",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c032",
+      "name": "Agua Vital 3L",
+      "description": "Agua Vital 3L",
+      "variant_sku": "c032",
+      "currency": "BOB",
+      "amount": "10.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "aguas",
+        "codigo": "c032",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c033",
+      "name": "Power 1L",
+      "description": "Power 1L",
+      "variant_sku": "c033",
+      "currency": "BOB",
+      "amount": "12.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "aguas",
+        "codigo": "c033",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c034",
+      "name": "Cabaña 500ml",
+      "description": "Cabaña 500ml",
+      "variant_sku": "c034",
+      "currency": "BOB",
+      "amount": "6.50",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "aguas",
+        "codigo": "c034",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c035",
+      "name": "Cabaña 2L",
+      "description": "Cabaña 2L",
+      "variant_sku": "c035",
+      "currency": "BOB",
+      "amount": "14.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "aguas",
+        "codigo": "c035",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c036",
+      "name": "Café 200ml",
+      "description": "Café 200ml",
+      "variant_sku": "c036",
+      "currency": "BOB",
+      "amount": "2.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "cafe",
+        "codigo": "c036",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c037",
+      "name": "Café 400ml",
+      "description": "Café 400ml",
+      "variant_sku": "c037",
+      "currency": "BOB",
+      "amount": "4.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "cafe",
+        "codigo": "c037",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c038",
+      "name": "Café con leche 200ml",
+      "description": "Café con leche 200ml",
+      "variant_sku": "c038",
+      "currency": "BOB",
+      "amount": "3.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "cafe",
+        "codigo": "c038",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c039",
+      "name": "Café con leche 400ml",
+      "description": "Café con leche 400ml",
+      "variant_sku": "c039",
+      "currency": "BOB",
+      "amount": "6.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "cafe",
+        "codigo": "c039",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c040",
+      "name": "Toddy con leche",
+      "description": "Toddy con leche",
+      "variant_sku": "c040",
+      "currency": "BOB",
+      "amount": "6.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "cafe",
+        "codigo": "c040",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c041",
+      "name": "Toddy con agua",
+      "description": "Toddy con agua",
+      "variant_sku": "c041",
+      "currency": "BOB",
+      "amount": "4.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "cafe",
+        "codigo": "c041",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c042",
+      "name": "Mate 200ml",
+      "description": "Mate 200ml",
+      "variant_sku": "c042",
+      "currency": "BOB",
+      "amount": "2.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "cafe",
+        "codigo": "c042",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c043",
+      "name": "Mate grande 400ml",
+      "description": "Mate grande 400ml",
+      "variant_sku": "c043",
+      "currency": "BOB",
+      "amount": "4.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "cafe",
+        "codigo": "c043",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c044",
+      "name": "Licuado de frutilla con agua",
+      "description": "Licuado de frutilla con agua",
+      "variant_sku": "c044",
+      "currency": "BOB",
+      "amount": "8.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "licuados",
+        "codigo": "c044",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c045",
+      "name": "Licuado de frutilla con leche",
+      "description": "Licuado de frutilla con leche",
+      "variant_sku": "c045",
+      "currency": "BOB",
+      "amount": "10.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "licuados",
+        "codigo": "c045",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c046",
+      "name": "Licuado de papaya con agua",
+      "description": "Licuado de papaya con agua",
+      "variant_sku": "c046",
+      "currency": "BOB",
+      "amount": "6.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "licuados",
+        "codigo": "c046",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c047",
+      "name": "Licuado de papaya con leche",
+      "description": "Licuado de papaya con leche",
+      "variant_sku": "c047",
+      "currency": "BOB",
+      "amount": "8.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "licuados",
+        "codigo": "c047",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c049",
+      "name": "Licuado de banana con leche",
+      "description": "Licuado de banana con leche",
+      "variant_sku": "c049",
+      "currency": "BOB",
+      "amount": "8.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "licuados",
+        "codigo": "c049",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c050",
+      "name": "Mocochinchi",
+      "description": "Mocochinchi",
+      "variant_sku": "c050",
+      "currency": "BOB",
+      "amount": "3.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "refrigerios",
+        "codigo": "c050",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c051",
+      "name": "Limonada",
+      "description": "Limonada",
+      "variant_sku": "c051",
+      "currency": "BOB",
+      "amount": "3.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "refrigerios",
+        "codigo": "c051",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c052",
+      "name": "Lima",
+      "description": "Lima",
+      "variant_sku": "c052",
+      "currency": "BOB",
+      "amount": "3.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "refrigerios",
+        "codigo": "c052",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c053",
+      "name": "Panza",
+      "description": "Panza",
+      "variant_sku": "c053",
+      "currency": "BOB",
+      "amount": "8.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "refrigerios",
+        "codigo": "c053",
+        "tracks_stock": true
+      }
+    },
+    {
+      "sku": "c054",
+      "name": "Asadito",
+      "description": "Asadito",
+      "variant_sku": "c054",
+      "currency": "BOB",
+      "amount": "6.00",
+      "available_quantity": 100,
+      "low_stock_threshold": 10,
+      "attributes": {
+        "category": "refrigerios",
+        "codigo": "c054",
+        "tracks_stock": true
+      }
+    }
+  ]
+}

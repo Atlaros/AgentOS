@@ -1,0 +1,79 @@
+{
+  "tenant_id": "dddddddd-dddd-dddd-dddd-dddddddddddd",
+  "branch_name": "La Paz",
+  "currency_note": "BOB — payment-test blouses at 1.00 (not the Excel catalog): pago1–pago4",
+  "products": [
+    {
+      "sku": "pago1",
+      "name": "Blusa prueba pago 1",
+      "description": "Blusa de prueba para QR. Precio fijo 1 BOB. No es catálogo de tienda.",
+      "variant_sku": "pago1-U-B",
+      "currency": "BOB",
+      "amount": "1.00",
+      "available_quantity": 50,
+      "low_stock_threshold": 1,
+      "attributes": {
+        "category": "blusas",
+        "talla": "U",
+        "color": "blanco",
+        "codigo": "pago1",
+        "test_only": true,
+        "image_url": "https://placehold.co/600x800/eee/333?text=PAGO1"
+      }
+    },
+    {
+      "sku": "pago2",
+      "name": "Blusa prueba pago 2",
+      "description": "Blusa de prueba para QR. Precio fijo 1 BOB. No es catálogo de tienda.",
+      "variant_sku": "pago2-U-N",
+      "currency": "BOB",
+      "amount": "1.00",
+      "available_quantity": 50,
+      "low_stock_threshold": 1,
+      "attributes": {
+        "category": "blusas",
+        "talla": "U",
+        "color": "negro",
+        "codigo": "pago2",
+        "test_only": true,
+        "image_url": "https://placehold.co/600x800/222/fff?text=PAGO2"
+      }
+    },
+    {
+      "sku": "pago3",
+      "name": "Blusa prueba pago 3",
+      "description": "Blusa de prueba para QR. Precio fijo 1 BOB. No es catálogo de tienda.",
+      "variant_sku": "pago3-U-A",
+      "currency": "BOB",
+      "amount": "1.00",
+      "available_quantity": 50,
+      "low_stock_threshold": 1,
+      "attributes": {
+        "category": "blusas",
+        "talla": "U",
+        "color": "azul",
+        "codigo": "pago3",
+        "test_only": true,
+        "image_url": "https://placehold.co/600x800/1d4ed8/fff?text=PAGO3"
+      }
+    },
+    {
+      "sku": "pago4",
+      "name": "Blusa prueba pago 4",
+      "description": "Blusa de prueba para QR. Precio fijo 1 BOB. No es catálogo de tienda.",
+      "variant_sku": "pago4-U-R",
+      "currency": "BOB",
+      "amount": "1.00",
+      "available_quantity": 50,
+      "low_stock_threshold": 1,
+      "attributes": {
+        "category": "blusas",
+        "talla": "U",
+        "color": "rojo",
+        "codigo": "pago4",
+        "test_only": true,
+        "image_url": "https://placehold.co/600x800/b91c1c/fff?text=PAGO4"
+      }
+    }
+  ]
+}

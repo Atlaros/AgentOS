@@ -1,0 +1,308 @@
+.file {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 44rem;
+}
+
+.back {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.back a {
+  color: var(--muted);
+  font-weight: 550;
+}
+
+.back a:hover {
+  color: var(--ink);
+}
+
+.header {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.wa {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.section {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.kicker {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.facts,
+.prefs {
+  display: grid;
+  gap: 0.55rem 1.25rem;
+  margin: 0;
+  padding: 0.9rem 1rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+.facts {
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+}
+
+.facts dt,
+.prefKey {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.facts dd,
+.prefValue {
+  margin: 0;
+  font-weight: 550;
+  overflow-wrap: anywhere;
+}
+
+.missing,
+.empty {
+  color: var(--muted);
+  font-weight: 450;
+}
+
+.empty {
+  margin: 0;
+  font-size: 0.9rem;
+  text-wrap: pretty;
+}
+
+.prefs {
+  grid-template-columns: minmax(6.5rem, 10rem) minmax(0, 1fr);
+  align-items: baseline;
+}
+
+.prefRow {
+  display: contents;
+}
+
+.tickets {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.ticket {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem 0.95rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.ticketHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ticketNo {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.total {
+  font-size: 1.05rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.statusLine,
+.delivery,
+.lines,
+.cart {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-wrap: pretty;
+}
+
+.statusLine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+  align-items: baseline;
+}
+
+.state {
+  font-weight: 650;
+}
+
+.hold {
+  color: var(--warn);
+}
+
+.live {
+  color: var(--ink);
+}
+
+.done {
+  color: var(--success);
+}
+
+.stop {
+  color: var(--muted);
+}
+
+.lines,
+.delivery,
+.cart {
+  color: var(--ink);
+}
+
+.activity {
+  display: grid;
+}
+
+.chat {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.chat:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.chatHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.55rem;
+}
+
+.chatLink {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.chatLink:hover {
+  color: var(--primary-text);
+}
+
+.chatLink:focus-visible {
+  outline: 2px solid var(--primary-text);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.35rem;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.pause {
+  color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 14%, transparent);
+}
+
+.human {
+  color: var(--error);
+  background: color-mix(in srgb, var(--error) 12%, transparent);
+}
+
+.last {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.notes {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note {
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--line);
+}
+
+.note:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.note time {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .facts {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+
+  .facts dt {
+    margin-top: 0.45rem;
+  }
+
+  .facts dt:first-child {
+    margin-top: 0;
+  }
+
+  .prefs {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .prefRow {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .ticketHead {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chatLink {
+    transition: none;
+  }
+}

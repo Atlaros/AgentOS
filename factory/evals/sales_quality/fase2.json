@@ -1,0 +1,159 @@
+{
+  "measured_at": "2026-09-22",
+  "phase": "fase2",
+  "model_provider": "fake",
+  "catalog": "closet+pay_test",
+  "note": "Re-measure after TK4 playbook index. FakeGateway drafts always use_fallback=true (deterministic reply path); decision_source shows seller authority.",
+  "quality": {
+    "cases": 25,
+    "passed": 25,
+    "failed": 0,
+    "pass_rate": 1.0,
+    "by_failure": {
+      "F1": {
+        "pass": 2,
+        "fail": 0
+      },
+      "F2": {
+        "pass": 2,
+        "fail": 0
+      },
+      "F3": {
+        "pass": 3,
+        "fail": 0
+      },
+      "F4": {
+        "pass": 3,
+        "fail": 0
+      },
+      "F5": {
+        "pass": 5,
+        "fail": 0
+      },
+      "F6": {
+        "pass": 4,
+        "fail": 0
+      },
+      "F7": {
+        "pass": 3,
+        "fail": 0
+      },
+      "F8": {
+        "pass": 3,
+        "fail": 0
+      }
+    },
+    "criteria": {
+      "address_tu": {
+        "ok": 14,
+        "n": 14,
+        "rate": 1.0
+      },
+      "answers_request": {
+        "ok": 18,
+        "n": 18,
+        "rate": 1.0
+      },
+      "has_advance_question": {
+        "ok": 8,
+        "n": 8,
+        "rate": 1.0
+      },
+      "max_three_options": {
+        "ok": 10,
+        "n": 10,
+        "rate": 1.0
+      },
+      "no_internal_jargon": {
+        "ok": 23,
+        "n": 23,
+        "rate": 1.0
+      },
+      "no_repeat_list": {
+        "ok": 1,
+        "n": 1,
+        "rate": 1.0
+      },
+      "respects_budget": {
+        "ok": 4,
+        "n": 4,
+        "rate": 1.0
+      }
+    },
+    "failed_ids": []
+  },
+  "fallback": {
+    "decision_turns": 34,
+    "decision_source": {
+      "sales_decision": 34
+    },
+    "propose_used_fallback_events": 0,
+    "draft_used_fallback_events": 39,
+    "tool_read_events": 12,
+    "turns_with_playbook_hits": 26,
+    "operations": {
+      "propose_who": 35,
+      "who_decision": 35,
+      "state_before": 34,
+      "propose": 34,
+      "sales_decision": 34,
+      "draft": 39,
+      "state_after": 34,
+      "tool_read": 12
+    },
+    "fallback_decision_rate": 0.0,
+    "sales_decision_rate": 1.0
+  },
+  "vs_baseline": {
+    "pass_rate": 1.0,
+    "baseline_pass_rate": 1.0,
+    "pass_rate_ok": true,
+    "failed": 0,
+    "criteria": {
+      "address_tu": {
+        "rate": 1.0,
+        "baseline_rate": 1.0,
+        "delta": 0.0,
+        "ok": true
+      },
+      "answers_request": {
+        "rate": 1.0,
+        "baseline_rate": 1.0,
+        "delta": 0.0,
+        "ok": true
+      },
+      "has_advance_question": {
+        "rate": 1.0,
+        "baseline_rate": 1.0,
+        "delta": 0.0,
+        "ok": true
+      },
+      "max_three_options": {
+        "rate": 1.0,
+        "baseline_rate": 1.0,
+        "delta": 0.0,
+        "ok": true
+      },
+      "no_internal_jargon": {
+        "rate": 1.0,
+        "baseline_rate": 1.0,
+        "delta": 0.0,
+        "ok": true
+      },
+      "no_repeat_list": {
+        "rate": 1.0,
+        "baseline_rate": 1.0,
+        "delta": 0.0,
+        "ok": true
+      },
+      "respects_budget": {
+        "rate": 1.0,
+        "baseline_rate": 1.0,
+        "delta": 0.0,
+        "ok": true
+      }
+    },
+    "no_regression": true
+  },
+  "failed_ids": []
+}
