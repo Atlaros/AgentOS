@@ -36,3 +36,12 @@ out/
 *.sqlite3
 .tmp/
 .cache/
+
+# Factory subtree local artifacts
+factory/.venv/
+factory/**/node_modules/
+factory/**/.next/
+factory/data/
+factory/.env
+factory/.env.*
+!factory/.env.example

@@ -1,0 +1,15 @@
+[project]
+name = "agentos-sdk"
+version = "0.1.0"
+description = "Thin HTTP client for AgentOS"
+requires-python = ">=3.12"
+dependencies = [
+  "httpx>=0.27",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["agentos_sdk"]

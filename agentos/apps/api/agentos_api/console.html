@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AgentOS console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,560;7..72,650&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #0f2e29;
+      color: #f7fffc;
+      font-family: "Source Sans 3", "Avenir Next", sans-serif;
+    }
+    main { max-width: 880px; margin: 0 auto; padding: 40px 20px 64px; }
+    h1 {
+      margin: 0 0 8px;
+      font-family: Literata, Palatino, serif;
+      font-size: 2.6rem;
+      font-weight: 650;
+      line-height: 1.1;
+      color: #f7fffc;
+    }
+    p { color: #f7fffc; font-size: 1.05rem; line-height: 1.5; }
+    .rail { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 28px 0; }
+    .stamp {
+      border: 1px solid #ffe7b8;
+      border-radius: 18px;
+      padding: 12px;
+      background: #123f38;
+    }
+    .stamp b {
+      display: block;
+      font-family: Literata, Palatino, serif;
+      font-size: 1.15rem;
+      color: #f7fffc;
+    }
+    .stamp span {
+      color: #ffe7b8;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+    }
+    form, #out {
+      background: #f7fffc;
+      color: #10211c;
+      border-radius: 18px;
+      padding: 18px;
+    }
+    label { display: block; font-size: 1rem; margin: 10px 0 4px; color: #10211c; }
+    input {
+      width: 100%;
+      border: 1px solid #10211c;
+      background: #ffffff;
+      color: #10211c;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: inherit;
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      background: #08382c;
+      color: #ffffff;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #out {
+      margin-top: 14px;
+      min-height: 160px;
+      white-space: pre-wrap;
+      font-family: ui-monospace, "SFMono-Regular", monospace;
+      font-size: 1rem;
+      color: #10211c;
+    }
+    @media (max-width: 700px) {
+      .rail { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>AgentOS teller window</h1>
+    <p>Lab console. It reads the API you point it at. It does not store keys and it does not open closed rails.</p>
+    <section class="rail" aria-label="Seams">
+      <div class="stamp"><b>Billing</b><span>lab, no charge</span></div>
+      <div class="stamp"><b>EVM</b><span>needs an RPC</span></div>
+      <div class="stamp"><b>Baneco</b><span>API not verified</span></div>
+      <div class="stamp"><b>Mainnet</b><span>denied</span></div>
+      <div class="stamp"><b>Custody</b><span>refused</span></div>
+      <div class="stamp"><b>Console</b><span>this window</span></div>
+    </section>
+    <form id="desk">
+      <label for="base">API base</label>
+      <input id="base" value="" placeholder="same origin" autocomplete="off">
+      <label for="org">Organization id</label>
+      <input id="org" autocomplete="off">
+      <label for="key">Bearer token</label>
+      <input id="key" type="password" autocomplete="off">
+      <div class="actions">
+        <button type="button" data-path="/v1/connections">Connections</button>
+        <button type="button" data-path="/v1/billing/plan">Plan</button>
+        <button type="button" data-path="/v1/wallets">Wallets</button>
+        <button type="button" data-path="/v1/ledger">Ledger</button>
+      </div>
+    </form>
+    <pre id="out">Waiting.</pre>
+  </main>
+  <script>
+    const out = document.querySelector("#out");
+    const base = document.querySelector("#base");
+    const org = document.querySelector("#org");
+    const key = document.querySelector("#key");
+    base.value = location.origin;
+    document.querySelectorAll("button[data-path]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const root = base.value.replace(/\/$/, "");
+        const response = await fetch(root + button.dataset.path, {
+          headers: {
+            Authorization: "Bearer " + key.value.trim(),
+            "X-Organization-Id": org.value.trim(),
+          },
+        });
+        out.textContent = response.status + "\n" + await response.text();
+      });
+    });
+  </script>
+</body>
+</html>

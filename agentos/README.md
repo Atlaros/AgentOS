@@ -1,0 +1,78 @@
+# AgentOS
+
+Financial layer of **Factory AgentOS** (this repo’s [`agentos/`](../) folder). Open financial infrastructure for AI agents and businesses — wallets, policy, ledger, REST/SDK/MCP. Stellar Testnet first.
+
+Factory (the SMB agent factory) lives next door in [`../factory/`](../factory/).
+
+**MVP heart (Sunday demo):** an external agent can **link/query a wallet → create a payment request → pass policy (human approve when required) → execute a Fake transfer → read the ledger**, via REST.
+
+First real network (stretch): Stellar Testnet. No private keys stored in the application database.
+
+## Status
+
+- Phase 1 docs: [`docs/`](docs/)
+- Decisions locked: [`docs/riesgos-y-decisiones.md`](docs/riesgos-y-decisiones.md)
+- Sunday E2E tracking: [`odd/tasks/sunday-e2e-demo.md`](odd/tasks/sunday-e2e-demo.md)
+
+## Quick start (lab)
+
+```bash
+cp .env.example .env
+docker compose up -d
+uv sync --all-packages --group dev
+uv run alembic upgrade head
+uv run agentos-api
+# other terminal:
+./scripts/demo_e2e.sh
+```
+
+API listens on `0.0.0.0:8080`. Postgres on host port **5433** (avoids clashing with Factory).
+
+## Tests
+
+```bash
+uv run pytest tests/unit -q
+AGENTOS_RUN_INTEGRATION=1 uv run pytest -q
+```
+
+## Layout
+
+- `apps/api` — FastAPI entrypoint
+- `apps/mcp` — MCP server (tools call SDK → same policy)
+- `packages/agentos` — domain modules (identity, wallets, ops, policy, ledger, adapters)
+- `packages/agentos_sdk` — thin Python client
+- `examples/pilot_agent_ia_client.py` — Phase 8 Agent-IA-shaped consumer (no Agent-IA repo edits)
+- `migrations` — Alembic from `001` (new schema; not Factory)
+- `docs/` — ADRs and architecture
+
+## Phase 8 pilot (Agent-IA-shaped client)
+
+With API running:
+
+```bash
+uv run python examples/pilot_agent_ia_client.py
+```
+
+## MCP
+
+```bash
+export AGENTOS_BASE_URL=http://127.0.0.1:8080
+export AGENTOS_API_KEY=...
+export AGENTOS_ORGANIZATION_ID=...
+uv run agentos-mcp
+```
+
+## Stellar Testnet (stretch)
+
+Fake is the default Sunday demo. Optional real Testnet path: see [`docs/lab-stellar-testnet.md`](docs/lab-stellar-testnet.md).
+
+```bash
+export AGENTOS_STELLAR_SECRET_KEY=S...   # same value used to start the API
+uv run python scripts/demo_stellar_api.py
+```
+
+
+## Out of scope (for now)
+
+Custody · Mainnet · Fiat/Baneco · Factory/Agent-IA code changes · commerce UI · billing
+
