@@ -51,6 +51,26 @@ async def test_submit_fails_without_secret() -> None:
 
 
 @pytest.mark.asyncio
+async def test_submit_rejects_usdc_without_network() -> None:
+    adapter = StellarTestnetAdapter(
+        horizon_url="https://horizon-testnet.stellar.org",
+        network_passphrase="Test SDF Network ; September 2015",
+        secret_key=None,
+    )
+    kp = Keypair.random()
+    result = await adapter.submit_payment(
+        from_address=kp.public_key,
+        to_address=Keypair.random().public_key,
+        asset_code="USDC",
+        amount=Decimal(1),
+        memo=None,
+        idempotency_key="usdc-not-enabled",
+    )
+    assert result.status == "failed"
+    assert result.network_tx_id == ""
+
+
+@pytest.mark.asyncio
 async def test_submit_fails_on_address_mismatch() -> None:
     signer = Keypair.random()
     other = Keypair.random()

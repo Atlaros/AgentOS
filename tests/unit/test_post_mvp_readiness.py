@@ -34,6 +34,26 @@ def test_connections_fail_closed_without_live_credentials() -> None:
     assert report["mainnet"]["detail"] == "mainnet_denied"
     assert report["custody"]["status"] == "refused"
     assert report["console"]["status"] == "ready"
+    assert report["stellar"]["status"] == "ready"
+    assert report["stellar"]["detail"] == "testnet_xlm"
+    assert report["pollar"]["status"] == "not_configured"
+    assert report["pollar"]["detail"] == "pollar_not_configured"
+    assert report["trustless_work"]["status"] == "not_connected"
+    keyed = connection_report(pollar_api_key="pub_testnet_example")
+    pollar = next(item for item in keyed if item["name"] == "pollar")
+    assert pollar["status"] == "not_configured"
+    assert pollar["detail"] == "pollar_secret_key_required"
+    assert "pub_testnet_example" not in pollar["detail"]
+    ready = connection_report(
+        pollar_api_key="sec_testnet_example",
+        trustless_api_key="tw_test_example",
+    )
+    by_name = {item["name"]: item for item in ready}
+    assert by_name["pollar"]["status"] == "configured"
+    assert by_name["pollar"]["detail"] == "pollar_ready"
+    assert "sec_testnet_example" not in by_name["pollar"]["detail"]
+    assert by_name["trustless_work"]["status"] == "configured"
+    assert "tw_test_example" not in by_name["trustless_work"]["detail"]
 
 
 def test_configured_evm_rpc_is_reported_without_calling_it() -> None:
@@ -125,7 +145,17 @@ def test_billing_and_connections_for_an_org_reader() -> None:
     report = client.get("/v1/connections")
     assert report.status_code == 200
     names = {item["name"] for item in report.json()}
-    assert names == {"billing", "evm", "baneco", "mainnet", "custody", "console"}
+    assert names == {
+        "billing",
+        "evm",
+        "baneco",
+        "mainnet",
+        "custody",
+        "console",
+        "stellar",
+        "pollar",
+        "trustless_work",
+    }
 
 
 def test_console_shell_embeds_no_lab_secret() -> None:

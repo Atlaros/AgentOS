@@ -73,7 +73,7 @@ Gate: **ninguna fase de código arranca** hasta aprobar ADRs + decisiones abiert
 ## Deuda lab cerrada (post F8)
 
 - [x] Reject payment + create application/agent + list/get agents
-- [x] Demo Stellar vía API (`scripts/demo_stellar_api.py`)
+- [x] Demo Stellar vía API (`scripts/demo_stellar_api.py`). Testnet, solo XLM. USDC no se envía. Pollar y Trustless Work no están conectados.
 - [ ] CI verde en GitHub Actions — **bloqueado**: cuenta Atlaros locked por billing (runs no arrancan). Workflow corregido a Postgres `:5432` en GHA.
 
 ## Post-MVP

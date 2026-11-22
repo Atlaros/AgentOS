@@ -81,6 +81,9 @@ Todavía no están cerrados. No hay cobro, ni Baneco, ni mainnet, ni custodia.
 | GET | `/console` | no | HTML. No embebe secretos. |
 | GET | `/v1/billing/plan` | `orgs:read` | `code=lab`, `payment_provider=null`, `charges=false` |
 | GET | `/v1/connections` | `orgs:read` | `baneco_api_unverified`, `mainnet_denied`, EVM `not_connected` salvo `AGENTOS_EVM_RPC_URL` |
+| GET | `/v1/ramps/routes` | `orgs:read` | Lista rutas Pollar. Puede venir vacía aunque un quote sí cotice. |
+| POST | `/v1/ramps/quotes` | `payments:create` | Cotiza onramp/offramp. `stellar_address` opcional vincula wallet EXTERNAL antes. No crea la orden. |
+| PUT | `/v1/ramps/wallets` | `payments:create` | Vincula una wallet EXTERNAL en Pollar para el `customer_id` (default: org). |
 | POST | `/v1/fiat-settlements` | `payments:create` | Factory avisa un pago fiat ya confirmado. `Idempotency-Key` = `provider_ref`. No mueve una wallet. |
 
 ## SDK (Python) — superficie mínima
